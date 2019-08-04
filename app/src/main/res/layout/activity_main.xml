@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:paddingTop="20dp"
     android:orientation="vertical"
+    android:paddingTop="20dp"
     tools:context=".MainActivity">
 
     <Button
@@ -14,37 +14,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Dialog1"/>
+        android:text="Dialog1" />
+
     <Button
         android:id="@+id/btn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dialog2"/>
+        android:text="Dialog2" />
+
     <Button
         android:id="@+id/btn3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dialog3"/>
+        android:text="Dialog3" />
+
     <Button
         android:id="@+id/btn4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dialog4"/>
+        android:text="Dialog4" />
+
     <Button
         android:id="@+id/btn5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dialog5"/>
+        android:text="Dialog5" />
+
     <Button
         android:id="@+id/btn6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dialog6"/>
+        android:text="Dialog6" />
+
     <Button
         android:id="@+id/btn7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dialog7"/>
+        android:text="Dialog7" />
 
 
 </LinearLayout>
