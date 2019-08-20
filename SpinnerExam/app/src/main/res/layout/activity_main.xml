@@ -25,6 +25,7 @@
         tools:ignore="MissingConstraints"/>
 
     <Button
+        android:id="@+id/btn1"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/spinner1"
         android:text="Ok"
