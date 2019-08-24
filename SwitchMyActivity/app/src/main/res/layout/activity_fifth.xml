@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FifthActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="96px"
+            android:layout_height="96px"
+            android:background="@drawable/facebook"
+            tools:ignore="PxUsage" />
+
+        <ImageView
+            android:layout_width="96px"
+            android:layout_height="96px"
+            android:background="@drawable/twitter"
+            tools:ignore="PxUsage" />
+
+        <ImageView
+            android:layout_width="96px"
+            android:layout_height="96px"
+            android:background="@drawable/line"
+            tools:ignore="PxUsage" />
+
+        <ImageView
+            android:layout_width="96px"
+            android:layout_height="96px"
+            android:background="@drawable/github"
+            tools:ignore="PxUsage" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray">
+
+        <TextView
+            android:fontFamily="@font/sarabun_bold"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create By MengX" />
+    </RelativeLayout>
+</RelativeLayout>
