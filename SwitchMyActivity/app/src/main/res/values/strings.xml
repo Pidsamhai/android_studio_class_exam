@@ -21,4 +21,8 @@
     <string name="profile">ประวัติส่วนตัว</string>
     <string name="dream">ความฝัน</string>
     <string name="movie">ภาพยนต์ที่ชอบ</string>
+    <string name="want_to_be">
+        ความฝันสูงสุดตอนนี้คืออยากกลับไปทำสวนอยู่บ้าน\n
+        โดยใช้ระบบ IOT เขียนโปรเเกรมเพื่อควบคุมคุณภาพ
+    </string>
 </resources>
