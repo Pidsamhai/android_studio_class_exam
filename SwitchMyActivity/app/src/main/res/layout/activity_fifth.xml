@@ -6,6 +6,7 @@
     tools:context=".FifthActivity">
 
     <LinearLayout
+        android:id="@+id/about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -38,12 +39,10 @@
             android:background="@drawable/github"
             tools:ignore="PxUsage" />
     </LinearLayout>
-
     <RelativeLayout
+        android:layout_below="@+id/about"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/gray">
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/credit"
             android:layout_centerHorizontal="true"
@@ -59,4 +58,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
+    <Button
+        android:textColor="@color/snow"
+        android:background="@color/green"
+        android:text="@string/back"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/b_back"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
 </RelativeLayout>
