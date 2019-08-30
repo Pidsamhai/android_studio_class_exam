@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SpinnerStringActivity">
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:text="@string/please_select_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Spinner
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/header"
+        android:id="@+id/spinner1"
+        android:entries="@array/planet"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"/>
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/spinner1"
+        android:id="@+id/b_spinner"
+        android:layout_marginTop="100dp"
+        android:text="@string/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:fontFamily="@font/mitr_regular"
+        android:textSize="15sp"
+        android:textColor="#ffff"
+        android:background="@color/colorPrimaryDark"
+        android:id="@+id/b_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/back" />
+
+</RelativeLayout>

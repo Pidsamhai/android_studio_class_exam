@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">MiniTest10Point</string>
+    <string name="single_choice">1. การสร้างปุ่มตัวเลือกแบบ Single Choice</string>
+    <string name="custom_layout">2. การสร้างแแบบปรับแต่งเอง Cutom Layout</string>
+    <string name="call_activity">3. การเรียกใช้ Activity</string>
+    <string name="spinner_string">4. การเรียก Array จากไฟล์ string.xml\nมาจัดการใน Spinner</string>
+    <string name="pcru_app">หน้าเเรก PCRU APP</string>
+    <string name="show_dialog">Show Dialog</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="please_select_items">Please Select Items</string>
+    <string name="ok">OK</string>
+    <string name="back">Back</string>
+    <string-array name="planet">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Naptune</item>
+    </string-array>
+</resources>

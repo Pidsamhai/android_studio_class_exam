@@ -40,7 +40,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void addCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        String val = category.getName();
+        //String val = category.getName();
         //Log.e("INIT SQL ",CREATE_TABLE);
         //Log.e("INIT SQL UNIQUE ",CREATE_UNIQUE_INDEX);
         //Log.e("INSERT VALUE",val);

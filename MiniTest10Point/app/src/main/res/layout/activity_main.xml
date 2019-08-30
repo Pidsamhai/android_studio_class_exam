@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:fontFamily="@font/mitr_regular"
+        android:layout_marginTop="20dp"
+        android:textSize="25sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pcru_app" />
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:fontFamily="@font/mitr_regular"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:textColor="#ffff"
+            android:background="@drawable/b_pink"
+            android:onClick="single_choice"
+            android:id="@+id/b_single_choice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/single_choice" />
+        <Button
+            android:fontFamily="@font/mitr_regular"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:textColor="#ffff"
+            android:background="@drawable/b_pink"
+            android:onClick="custom_layout"
+            android:id="@+id/b_custom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_layout" />
+        <Button
+            android:fontFamily="@font/mitr_regular"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:textColor="#ffff"
+            android:background="@drawable/b_pink"
+            android:onClick="call_activity"
+            android:id="@+id/b_call_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/call_activity" />
+        <Button
+            android:fontFamily="@font/mitr_regular"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:textColor="#ffff"
+            android:background="@drawable/b_pink"
+            android:onClick="spinner_string"
+            android:id="@+id/b_spinner_string"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/spinner_string" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
