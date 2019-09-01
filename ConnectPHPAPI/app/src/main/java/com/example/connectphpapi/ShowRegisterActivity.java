@@ -2,6 +2,7 @@ package com.example.connectphpapi;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -75,7 +76,9 @@ public class ShowRegisterActivity extends AppCompatActivity {
                         .setNegativeButton("เเก้ไข", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+                                Intent intent = new Intent(getApplicationContext(),EditActivity.class)
+                                        .putExtra("std_id",IdList.get(position));
+                                startActivity(intent);
                             }
                         })
                         .setNeutralButton("ยกเลิก", new DialogInterface.OnClickListener() {

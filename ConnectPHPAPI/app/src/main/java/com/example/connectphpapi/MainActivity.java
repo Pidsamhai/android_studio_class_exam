@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 params.put("major", i_major);
                 params.put("username", i_username);
                 params.put("password", i_password);
-                Log.e("PARAMS", String.valueOf(params));
+                //Log.e("PARAMS", String.valueOf(params));
                 return params;
             }
         };
