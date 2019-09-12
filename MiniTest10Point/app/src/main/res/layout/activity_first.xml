@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".FirstActivity">
 
+    <TextView
+        android:fontFamily="@font/mitr_regular"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:text="ภาพประจำตัว"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:layout_centerInParent="true"
+        android:src="@drawable/profile_pic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
     <Button
         android:fontFamily="@font/mitr_regular"
         android:textSize="15sp"

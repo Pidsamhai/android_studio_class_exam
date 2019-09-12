@@ -9,6 +9,7 @@
     tools:context=".SpinnerStringActivity">
 
     <TextView
+        android:fontFamily="@font/mitr_regular"
         android:id="@+id/header"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
@@ -26,6 +27,9 @@
         android:layout_height="50dp"/>
 
     <Button
+        android:fontFamily="@font/mitr_regular"
+        android:textColor="#ffffff"
+        android:background="@drawable/b_pink"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/spinner1"
         android:id="@+id/b_spinner"

@@ -6,9 +6,12 @@
     tools:context=".SingleChoiceActivity">
 
     <Button
+        android:textColor="#ffffff"
+        android:background="@drawable/b_pink"
+        android:fontFamily="@font/mitr_regular"
         android:id="@+id/b_dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:text="@string/show_dialog" />
 

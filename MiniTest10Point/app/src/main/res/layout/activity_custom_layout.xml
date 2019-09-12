@@ -7,10 +7,13 @@
     tools:context=".CustomLayoutActivity">
 
     <Button
+        android:background="@drawable/b_pink"
+        android:textColor="#ffffff"
+        android:fontFamily="@font/mitr_regular"
         android:layout_centerInParent="true"
         android:id="@+id/b_dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:text="@string/show_dialog" />
     <Button
         android:fontFamily="@font/mitr_regular"
