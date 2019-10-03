@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private static String IP = "192.168.56.1";
+    private static String IP = "192.168.43.225";
     //private static String PATH = "dummy_repeat.php";
     private static String PATH = "insert.php";
     private static String URL = "http://" + IP + "/apiV1/"+PATH;

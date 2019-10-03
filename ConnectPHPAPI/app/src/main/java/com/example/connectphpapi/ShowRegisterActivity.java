@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowRegisterActivity extends AppCompatActivity {
-    private static String IP = "192.168.56.1";
+    private static String IP = Config.IP;
     private static String PATH = "select.php";
     private static final String URL = "http://" + IP + "/apiV1/" + PATH;
 

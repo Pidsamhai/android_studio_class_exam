@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditActivity extends AppCompatActivity {
-    private static String IP = "192.168.56.1";
+    private static String IP = Config.IP;
     private static String PATH = "edit.php";
     private static final String URL_UPDATE = "http://" + IP + "/apiV1/" + PATH;
     private EditText e_name, e_phone, e_faculty, e_major, e_username, e_password;
@@ -76,7 +76,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void ShowData() {
-        String URL = "http://192.168.56.1/apiV1/ed.php?std_id="+std_id;
+        String URL = "http://"+IP+"/apiV1/ed.php?std_id="+std_id;
         final ProgressDialog progressDialog = ProgressDialog.show(this, "Loading...", "Please wait...");
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
