@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "435975701963",
+    "firebase_url": "https://pcru-giftshop.firebaseio.com",
+    "project_id": "pcru-giftshop",
+    "storage_bucket": "pcru-giftshop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435975701963:android:69e36379f47d95fbe5224e",
+        "android_client_info": {
+          "package_name": "com.example.giftshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435975701963-0aggbvtase1017l7uavjr2f8pg6hen3s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.giftshop",
+            "certificate_hash": "ed7372b819c22eab52f08f4ba0dc43a14de44c4a"
+          }
+        },
+        {
+          "client_id": "435975701963-6epufm32p47stg1jiiaumsqbbhc68l7c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSNe7J8EQyuxuQeuBRubhwKkBJrLHL3rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "435975701963-6epufm32p47stg1jiiaumsqbbhc68l7c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

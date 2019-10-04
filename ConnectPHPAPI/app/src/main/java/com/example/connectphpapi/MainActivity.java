@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private static String IP = "192.168.43.225";
+    private static String IP = Config.IP;
     //private static String PATH = "dummy_repeat.php";
     private static String PATH = "insert.php";
-    private static String URL = "http://" + IP + "/apiV1/"+PATH;
+    private static String URL = "http://" + IP + "/apiV1/" + PATH;
     private EditText e_name, e_phone, e_faculty, e_major, e_username, e_password;
     private Button b_insert, b_showdata;
     private String i_name, i_phone, i_faculty, i_major, i_username, i_password;
