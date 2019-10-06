@@ -1,10 +1,5 @@
 package com.example.giftshop;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +15,11 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,18 +27,27 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class AddProductActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private Button b_save;
-    private EditText e_product_name,e_product_detail,e_product_tel;
+    private EditText e_product_name, e_product_detail, e_product_tel;
     private FirebaseAuth firebaseAuth;
     private FloatingActionButton f_add_product;
     private FirebaseUser firebaseUser;
@@ -48,7 +57,9 @@ public class AddProductActivity extends AppCompatActivity {
     private LinearLayout img_layout;
     private Uri fileUri;
     private HorizontalScrollView pick_img_layout;
-    //private List<Uri> fileUri_list;
+    private UploadTask uploadTask;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
     private ArrayList<Uri> fileUri_list;
     public static final int PICKFILE_RESULT_CODE = 1;
 
@@ -66,6 +77,8 @@ public class AddProductActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReferenceFromUrl("gs://pcru-giftshop.appspot.com");
 
         b_save = findViewById(R.id.b_save);
         e_product_name = findViewById(R.id.e_product_name);
@@ -94,48 +107,71 @@ public class AddProductActivity extends AppCompatActivity {
             }
         });
 
-        /*pic_img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-                chooseFile.setType("image/*");
-                chooseFile = Intent.createChooser(chooseFile, "Choose a file");
-                startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
-            }
-        });
-
-         */
 
         b_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                builder.show();
-                Map<String,Object> productObj = new HashMap<>();
-                productObj.put("u_id",firebaseUser.getUid());
-                productObj.put("name",e_product_name.getText().toString());
-                productObj.put("description",e_product_detail.getText().toString());
-                productObj.put("tel",e_product_tel.getText().toString());
-                db.collection("product")
-                        .add(productObj)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                builder.dismiss();
-                                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        builder.dismiss();
-                        Log.e(TAG, "onFailure: " + e );
-                    }
-                });
-                Log.e(TAG, "onClick: " + productObj);
-                builder.dismiss();
+                upLoadImg();
             }
         });
 
 
+    }
+
+    protected void upLoadImg() {
+        if (fileUri_list.size() > 0) {
+            final List<String> file_name = new ArrayList<>();
+            for (Uri file : fileUri_list) {
+                builder.show();
+                final String unique_id = UUID.randomUUID().toString();
+                final StorageReference fileUploadPath = storageReference.child("profile/" + unique_id + ".png");
+                uploadTask = fileUploadPath.putFile(file);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.e("Setting", "onSuccess: " + taskSnapshot.getMetadata());
+                        Log.e(TAG, "Image Name: " + unique_id + ".png");
+                        Log.e(TAG, "filename Index onSuccess: " + file_name.size());
+                        builder.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: " + e);
+                        builder.dismiss();
+                    }
+                });
+                file_name.add(unique_id + ".png");
+                Log.e(TAG, "upLoadImg: " + file);
+            }
+            Log.e(TAG, "Complete: ");
+            builder.setTitle("Add to FireStore");
+            builder.show();
+            Log.e(TAG, "filename Index: " + file_name.size());
+            Map<String, Object> productObj = new HashMap<>();
+            productObj.put("u_id", firebaseUser.getUid());
+            productObj.put("name", e_product_name.getText().toString());
+            productObj.put("description", e_product_detail.getText().toString());
+            productObj.put("tel", e_product_tel.getText().toString());
+            productObj.put("picture", file_name);
+            db.collection("product")
+                    .add(productObj)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            builder.dismiss();
+                            Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    builder.dismiss();
+                    Log.e(TAG, "onFailure: " + e);
+                }
+            });
+
+        }
+        finish();
     }
 
     @Override
@@ -146,8 +182,10 @@ public class AddProductActivity extends AppCompatActivity {
                 if (resultCode == -1) {
                     fileUri = data.getData();
                     final ImageView imageView = new ImageView(AddProductActivity.this);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(300,200);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(300, 200);
+                    lp.setMargins(10, 0, 10, 0);
                     imageView.setLayoutParams(lp);
+                    imageView.setBackground(getResources().getDrawable(R.drawable.img_border));
                     imageView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
@@ -157,7 +195,7 @@ public class AddProductActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             imageView.setVisibility(View.GONE);
-                                            fileUri_list.remove(fileUri_list.size()-1);
+                                            fileUri_list.remove(fileUri_list.size() - 1);
                                         }
                                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 @Override
@@ -166,9 +204,9 @@ public class AddProductActivity extends AppCompatActivity {
                                 }
                             }).show();
                             Log.e(TAG, "Current Index: " + fileUri_list.size());
-                            if(fileUri_list.size() == 0){
+                            if (fileUri_list.size() == 0) {
                                 pick_img_layout.setBackground(getResources().getDrawable(R.drawable.ic_insert_photo_24dp));
-                            }else if(fileUri_list.size() < 3){
+                            } else if (fileUri_list.size() < 3) {
                                 f_add_product.setEnabled(true);
                             }
                             return false;
@@ -179,11 +217,12 @@ public class AddProductActivity extends AppCompatActivity {
                             .into(imageView);
                     fileUri_list.add(fileUri);
                     //fileUri_list.add(fileUri);
-                    if(fileUri_list.size() > 0 ) pick_img_layout.setBackgroundColor(Color.parseColor("#eeeeee"));
+                    if (fileUri_list.size() > 0)
+                        pick_img_layout.setBackgroundColor(Color.parseColor("#eeeeee"));
 
                     Log.e(TAG, "Uri Index: " + fileUri_list.size());
                     img_layout.addView(imageView);
-                    if(fileUri_list.size() == 3){
+                    if (fileUri_list.size() == 3) {
                         f_add_product.setEnabled(false);
                     }
                 }
