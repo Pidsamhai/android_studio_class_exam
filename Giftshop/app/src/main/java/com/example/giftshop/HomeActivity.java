@@ -20,9 +20,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,6 +39,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "HomeActivity";
     private TextView profile_name,profile_email,t_name;
     private ImageView profile_pic;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
 
         final View headerView = navigationView.getHeaderView(0);
         profile_name = headerView.findViewById(R.id.profile_name);
@@ -69,7 +77,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         profile_pic = headerView.findViewById(R.id.drawer_profile_pic);
 
         t_name = findViewById(R.id.t_name);
-        t_name.setText(firebaseUser.getDisplayName());
+        /*db.collection("product")
+                .whereEqualTo("u_id",firebaseUser.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+
+                    }
+                });
+
+         */
 
         Button b_profile_setting = headerView.findViewById(R.id.b_profile_setting);
 
@@ -125,12 +150,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Boolean select = true;
         switch (item.getItemId()){
             case R.id.menu_card_view:
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
                 break;
-            case R.id.menu_recycler_view:
-                Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
+            case R.id.menu_add_product:
+                //Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
+                select = false;
+                Intent intent = new Intent(HomeActivity.this,AddProductActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_view_pager:
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
@@ -143,7 +172,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         drawerLayout.closeDrawer(navigationView);
-        return true;
+        return select;
     }
 
 }

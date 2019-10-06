@@ -11,4 +11,6 @@
     <string name="last_name">Last name</string>
     <string name="save">Save</string>
     <string name="home">Home</string>
+    <string name="product_name">Product name</string>
+    <string name="product_detail">Product detail</string>
 </resources>

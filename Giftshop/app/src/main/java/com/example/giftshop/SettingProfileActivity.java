@@ -50,6 +50,7 @@ public class SettingProfileActivity extends AppCompatActivity {
     private View snackbarView;
     private Snackbar snackbar;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".AddProductActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primaryColor"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="@color/primaryTextColor" />
+
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/pick_img"
+        android:layout_marginTop="80dp"
+        android:background="@color/primaryDarkColor"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_below="@id/pick_img"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/product_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/product_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/e_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_below="@id/product_name"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/product_detail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/product_detail">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/e_product_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_below="@id/product_detail"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/product_tel"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/tel">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/e_product_tel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/b_save"
+        android:layout_alignParentBottom="true"
+        android:text="@string/save"
+        android:background="@color/primaryLightColor"
+        android:textColor="@color/primaryTextColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
