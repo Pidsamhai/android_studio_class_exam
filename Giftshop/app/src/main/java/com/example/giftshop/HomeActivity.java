@@ -16,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +31,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     private AlertDialog builder;
     private static final String TAG = "HomeActivity";
-    private TextView profile_name,profile_email;
+    private TextView profile_name,profile_email,t_name;
+    private ImageView profile_pic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(HomeActivity.this)
                 .setTitle("Logout...")
@@ -61,7 +65,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         final View headerView = navigationView.getHeaderView(0);
         profile_name = headerView.findViewById(R.id.profile_name);
-        profile_email= headerView.findViewById(R.id.profile_email);
+        profile_email = headerView.findViewById(R.id.profile_email);
+        profile_pic = headerView.findViewById(R.id.drawer_profile_pic);
+
+        t_name = findViewById(R.id.t_name);
+        t_name.setText(firebaseUser.getDisplayName());
 
         Button b_profile_setting = headerView.findViewById(R.id.b_profile_setting);
 
@@ -81,8 +89,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        profile_name.setText(firebaseUser.getDisplayName());
-        profile_email.setText(firebaseUser.getEmail());
+        if(firebaseUser.getDisplayName() !=null && firebaseUser.getPhotoUrl() != null){
+            Glide.with(HomeActivity.this)
+                    .load(firebaseUser.getPhotoUrl())
+                    .into(profile_pic);
+            profile_name.setText(firebaseUser.getDisplayName());
+            profile_email.setText(firebaseUser.getEmail());
+        }
     }
 
     void fireBaseLogout(){

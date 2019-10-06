@@ -19,7 +19,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:id="@+id/profile_pic"
-        android:background="@color/primaryDarkColor"
         android:layout_width="100dp"
         android:layout_height="100dp"/>
 
@@ -56,6 +55,15 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/b_upload"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tel"
+        android:text="Upload"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name"
