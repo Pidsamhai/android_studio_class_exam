@@ -1,16 +1,10 @@
 package com.example.giftshop;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,16 +13,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,9 +41,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     private AlertDialog builder;
     private static final String TAG = "HomeActivity";
-    private TextView profile_name,profile_email,t_name;
+    private TextView profile_name, profile_email, t_name;
     private ImageView profile_pic;
     private FirebaseFirestore db;
+    private List<Product> products;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +74,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .create();
 
 
-
-
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
@@ -75,8 +81,58 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         profile_name = headerView.findViewById(R.id.profile_name);
         profile_email = headerView.findViewById(R.id.profile_email);
         profile_pic = headerView.findViewById(R.id.drawer_profile_pic);
+        recyclerView = findViewById(R.id.recycle_product_view);
+        swipeRefreshLayout = findViewById(R.id.refresh_layout);
 
-        t_name = findViewById(R.id.t_name);
+
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        /*
+        swipeRefreshLayout.setRefreshing(true);
+        db.collection("product")
+                .whereEqualTo("u_id", firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        products = queryDocumentSnapshots.toObjects(Product.class);
+                        ProductAdapter adapter = new ProductAdapter(products);
+                        recyclerView.setAdapter(adapter);
+                        Log.e(TAG, "onSuccess: Load Complete");
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+
+         */
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                db.collection("product")
+                        //.whereEqualTo("u_id", firebaseUser.getUid())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                products = queryDocumentSnapshots.toObjects(Product.class);
+                                ProductAdapter adapter = new ProductAdapter(products);
+                                recyclerView.setAdapter(adapter);
+                                Log.e(TAG, "onSuccess: Load Complete");
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+            }
+        });
+
+        swipeRefreshLayout.setColorSchemeColors(
+                getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light)
+        );
+
+
+
         /*db.collection("product")
                 .whereEqualTo("u_id",firebaseUser.getUid())
                 .get()
@@ -93,28 +149,43 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
-
          */
 
-        Button b_profile_setting = headerView.findViewById(R.id.b_profile_setting);
 
+        Button b_profile_setting = headerView.findViewById(R.id.b_profile_setting);
 
 
         b_profile_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawerLayout.closeDrawer(navigationView);
-                Intent intent = new Intent(HomeActivity.this,SettingProfileActivity.class);
+                Intent intent = new Intent(HomeActivity.this, SettingProfileActivity.class);
                 startActivity(intent);
             }
         });
 
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
-        if(firebaseUser.getDisplayName() !=null && firebaseUser.getPhotoUrl() != null){
+        swipeRefreshLayout.setRefreshing(true);
+        db.collection("product")
+                //.whereEqualTo("u_id", firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        products = queryDocumentSnapshots.toObjects(Product.class);
+                        ProductAdapter adapter = new ProductAdapter(products);
+                        recyclerView.setAdapter(adapter);
+                        Log.e(TAG, "onSuccess: Load Complete");
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+        //Log.e(TAG, "onStart Uri: " + firebaseUser.getPhotoUrl());
+        if (firebaseUser.getDisplayName() != null && firebaseUser.getPhotoUrl() != null) {
             Glide.with(HomeActivity.this)
                     .load(firebaseUser.getPhotoUrl())
                     .into(profile_pic);
@@ -123,10 +194,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    void fireBaseLogout(){
+    void fireBaseLogout() {
         FirebaseAuth.getInstance().signOut();
         builder.show();
-        final Intent intent = new Intent(HomeActivity.this,MainActivity.class);
+        final Intent intent = new Intent(HomeActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         new Handler().postDelayed(new Runnable() {
@@ -151,14 +222,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Boolean select = true;
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_card_view:
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
                 break;
             case R.id.menu_add_product:
                 //Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
                 select = false;
-                Intent intent = new Intent(HomeActivity.this,AddProductActivity.class);
+                Intent intent = new Intent(HomeActivity.this, AddProductActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_view_pager:

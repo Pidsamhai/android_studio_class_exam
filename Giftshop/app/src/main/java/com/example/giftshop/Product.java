@@ -4,19 +4,19 @@ import java.util.List;
 
 public class Product {
 
-    private String uid;
+    private String u_id;
     private String name;
     private String description;
     private String tel;
-    //private List<String> picture;
+    private String picture;
 
     public Product() {}
 
-    //public Product(String uid,String name,String description,String tel,List<String> picture){}
-    public Product(String uid,String name,String description,String tel){}
+    public Product(String u_id,String name,String description,String tel,String picture){}
 
-    public String getUid() {
-        return uid;
+
+    public String getU_id() {
+        return u_id;
     }
 
     public String getName() {
@@ -31,9 +31,7 @@ public class Product {
         return tel;
     }
 
-    /*public List<String> getPicture() {
+    public String getPicture() {
         return picture;
     }
-
-     */
 }

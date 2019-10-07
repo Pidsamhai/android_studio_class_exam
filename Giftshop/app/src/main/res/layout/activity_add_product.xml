@@ -9,16 +9,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".AddProductActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/f_add_product"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="65dp"
-        android:src="@drawable/ic_add_product_24dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:ignore="RelativeOverlap" />
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -27,23 +17,33 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:titleTextColor="@color/primaryTextColor" />
 
-    <HorizontalScrollView
-        android:background="@drawable/ic_insert_photo_24dp"
+    <RelativeLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#E4E2E2"
         android:layout_marginTop="60dp"
         android:orientation="horizontal"
         android:id="@+id/pick_img_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
+        <ImageView
+            android:id="@+id/pick_img_btn"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_insert_photo_24dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
         <LinearLayout
             android:id="@+id/img_layout"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         </LinearLayout>
 
-    </HorizontalScrollView>
+
+    </RelativeLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
