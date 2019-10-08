@@ -87,23 +87,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        /*
+
+
         swipeRefreshLayout.setRefreshing(true);
         db.collection("product")
-                .whereEqualTo("u_id", firebaseUser.getUid())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         products = queryDocumentSnapshots.toObjects(Product.class);
-                        ProductAdapter adapter = new ProductAdapter(products);
+                        ProductAdapter adapter = new ProductAdapter(HomeActivity.this,products);
                         recyclerView.setAdapter(adapter);
                         Log.e(TAG, "onSuccess: Load Complete");
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });
-
-         */
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -115,7 +113,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 products = queryDocumentSnapshots.toObjects(Product.class);
-                                ProductAdapter adapter = new ProductAdapter(products);
+                                ProductAdapter adapter = new ProductAdapter(HomeActivity.this,products);
                                 recyclerView.setAdapter(adapter);
                                 Log.e(TAG, "onSuccess: Load Complete");
                                 swipeRefreshLayout.setRefreshing(false);
@@ -131,25 +129,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 getResources().getColor(android.R.color.holo_red_light)
         );
 
-
-
-        /*db.collection("product")
-                .whereEqualTo("u_id",firebaseUser.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-
-                    }
-                });
-         */
 
 
         Button b_profile_setting = headerView.findViewById(R.id.b_profile_setting);
@@ -170,7 +149,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        swipeRefreshLayout.setRefreshing(true);
+        /*swipeRefreshLayout.setRefreshing(true);
         db.collection("product")
                 //.whereEqualTo("u_id", firebaseUser.getUid())
                 .get()
@@ -178,13 +157,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         products = queryDocumentSnapshots.toObjects(Product.class);
-                        ProductAdapter adapter = new ProductAdapter(products);
+                        ProductAdapter adapter = new ProductAdapter(HomeActivity.this,products);
                         recyclerView.setAdapter(adapter);
                         Log.e(TAG, "onSuccess: Load Complete");
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });
         //Log.e(TAG, "onStart Uri: " + firebaseUser.getPhotoUrl());
+
+         */
         if (firebaseUser.getDisplayName() != null && firebaseUser.getPhotoUrl() != null) {
             Glide.with(HomeActivity.this)
                     .load(firebaseUser.getPhotoUrl())
@@ -221,7 +202,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Boolean select = true;
+        boolean select = true;
         switch (item.getItemId()) {
             case R.id.menu_card_view:
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());

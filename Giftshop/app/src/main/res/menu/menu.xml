@@ -6,16 +6,21 @@
             android:id="@+id/menu_card_view"
             android:title="@string/home"/>
         <item
-            android:icon="@drawable/ic_add_box_24dp"
+            android:icon="@drawable/ic_add_shopping_cart_24dp"
             android:id="@+id/menu_add_product"
-            android:title="Add Product"/>
-        <item android:id="@+id/menu_view_pager"
-            android:title="ViewPager"/>
-        <item android:id="@+id/menu_bottom_navigator"
-            android:title="BottomNavigator"/>
+            android:title="@string/add_product"/>
+        <item
+            android:icon="@drawable/ic_shopping_cart_24dp"
+            android:id="@+id/menu_view_pager"
+            android:title="@string/my_product"/>
+
         <item
             android:icon="@drawable/ic_input_black_24dp"
             android:id="@+id/menu_logout"
             android:title="@string/logout"/>
+        <item
+            android:icon="@drawable/ic_info_24dp"
+            android:id="@+id/menu_bottom_navigator"
+            android:title="@string/about"/>
     </group>
 </menu>

@@ -13,4 +13,7 @@
     <string name="home">Home</string>
     <string name="product_name">Product name</string>
     <string name="product_detail">Product detail</string>
+    <string name="my_product">My Product</string>
+    <string name="add_product">Add Product</string>
+    <string name="about">About</string>
 </resources>
