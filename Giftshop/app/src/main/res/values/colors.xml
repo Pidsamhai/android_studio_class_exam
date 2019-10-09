@@ -3,11 +3,8 @@
     <color name="primaryColor">#8e24aa</color>
     <color name="primaryLightColor">#c158dc</color>
     <color name="primaryDarkColor">#5c007a</color>
-    <color name="secondaryColor">#00b8d4</color>
-    <color name="secondaryLightColor">#62ebff</color>
-    <color name="secondaryDarkColor">#0088a3</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="grey">#4D5A5959</color>
-    <color name="transparent">#00FFFFFF</color>
+    <color name="google_plus">#F44336</color>
 </resources>

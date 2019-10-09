@@ -25,6 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +52,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private GoogleSignInOptions gso;
+    private GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +82,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
         final View headerView = navigationView.getHeaderView(0);
         profile_name = headerView.findViewById(R.id.profile_name);
@@ -169,6 +180,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (firebaseUser.getDisplayName() != null && firebaseUser.getPhotoUrl() != null) {
             Glide.with(HomeActivity.this)
                     .load(firebaseUser.getPhotoUrl())
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
                     .into(profile_pic);
             profile_name.setText(firebaseUser.getDisplayName());
             profile_email.setText(firebaseUser.getEmail());
@@ -178,6 +191,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     void fireBaseLogout() {
         FirebaseAuth.getInstance().signOut();
         builder.show();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        googleSignInClient.signOut();
         final Intent intent = new Intent(HomeActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

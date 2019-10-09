@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +89,8 @@ public class AddProductActivity extends AppCompatActivity {
         fileUri_list = new ArrayList<>();
         pick_img_layout = findViewById(R.id.pick_img_layout);
         //pic_img = findViewById(R.id.pick_img);
+
+        e_product_tel.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(AddProductActivity.this)

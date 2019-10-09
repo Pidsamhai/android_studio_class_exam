@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +16,37 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.facebook.CallbackManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private AlertDialog builder;
+    private GoogleSignInClient googleSignInClient;
+    private Integer RC_SIGN_IN = 7;
+    private GoogleSignInOptions gso;
+    private CallbackManager callbackManager;
+    private String valid_email;
+    private static final String TAG = "MainActivity";
 
     public MainActivity() {
     }
@@ -45,10 +63,23 @@ public class MainActivity extends AppCompatActivity {
 
 
         firebaseAuth = FirebaseAuth.getInstance();
+        callbackManager = CallbackManager.Factory.create();
 
-        Button b_login = findViewById(R.id.b_login);
+        final Button b_login = findViewById(R.id.b_login);
+        //final LoginButton b_facebook_login = findViewById(R.id.b_facebook_login);
+        final Button b_google_login = findViewById(R.id.b_google_login);
         final EditText email = findViewById(R.id.e_email);
         final EditText password = findViewById(R.id.e_password);
+        final TextInputLayout l_email = findViewById(R.id.email);
+        final TextInputLayout l_password = findViewById(R.id.password);
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(MainActivity.this)
@@ -56,6 +87,96 @@ public class MainActivity extends AppCompatActivity {
                 .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                 .setCancelable(false)
                 .create();
+        /*
+
+        b_facebook_login.setReadPermissions("email", "public_profile");
+        b_facebook_login.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                //handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+                // ...
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
+                // ...
+            }
+
+        });
+
+         */
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Is_Valid_Email(email);
+            }
+            private void Is_Valid_Email(EditText edt) {
+                if (edt.getText().toString().isEmpty()) {
+                    l_email.setError("Email is required");
+                } else if (!isEmailValid(edt.getText().toString())) {
+                    l_email.setError("Email is required");
+                } else {
+                    l_email.setErrorEnabled(false);
+                }
+            }
+            boolean isEmailValid(CharSequence email) {
+                return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
+                        .matches();
+            }
+        });
+
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                contpassword(password);
+            }
+            private void contpassword(EditText edt){
+                if(!edt.getText().toString().isEmpty()){
+                    if(edt.getText().toString().length() >= 6){
+                        l_password.setErrorEnabled(false);
+                    }else if (edt.getText().toString().length() > 0){
+                        l_password.setError("Password must 6 character");
+                    }
+                }else {
+                    l_password.setError("Password is required");
+                }
+            }
+        });
+
+
+        b_google_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
 
 
         b_login.setOnClickListener(new View.OnClickListener() {
@@ -63,13 +184,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                if (TextUtils.isEmpty(email.getText().toString().trim()) || TextUtils.isEmpty(password.getText().toString().trim())) {
-                    if (TextUtils.isEmpty(email.getText().toString().trim())) {
-                        email.setError("Email is required");
-                    } else {
-                        password.setError("Password is required");
-                    }
-                    //builder.dismiss();
+                if (TextUtils.isEmpty(email.getText().toString().trim())) {
+                    l_email.setError("Email is required");
+                    return;
+                }else if(TextUtils.isEmpty(password.getText().toString().trim())){
+                    l_password.setError("Password is required");
                     return;
                 }
 
@@ -114,10 +233,46 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.e("MainActivity", "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.e("MainActivity", "signInWithCredential:success");
+                            checkUser();
+                        } else {
+                            Log.e("MainActivity", "signInWithCredential:failure", task.getException());
+                        }
+
+                    }
+                });
+    }
+
     @Override
-    protected void onStart() {
-        super.onStart();
-        //final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Loading...", "Please...wait");
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("Result", "onActivityResult: " + requestCode);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                Log.w("On activity Result Main", "Google sign in failed", e);
+            }
+        }
+    }
+
+    private void checkUser() {
         builder.show();
         firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
@@ -135,5 +290,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             builder.dismiss();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkUser();
     }
 }

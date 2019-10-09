@@ -72,7 +72,6 @@ public class SettingProfileActivity extends AppCompatActivity {
         final StorageReference fileUploadPath = storageReference.child("profile/" + firebaseUser.getUid() + ".png");
 
         Button b_save = findViewById(R.id.b_save);
-        Button b_upload = findViewById(R.id.b_upload);
 
         final EditText e_name = findViewById(R.id.e_name);
         final EditText e_last_name = findViewById(R.id.e_last_name);
@@ -89,11 +88,6 @@ public class SettingProfileActivity extends AppCompatActivity {
                     .load(firebaseUser.getPhotoUrl())
                     .into(profile_pic);
         }
-
-        //Log.e("Uri Create", "onCreate: " + firebaseUser.getPhotoUrl());
-
-
-
 
         snackbar = Snackbar.make(context, "Save success!", Snackbar.LENGTH_LONG);
         snackbarView = snackbar.getView();
@@ -131,7 +125,6 @@ public class SettingProfileActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            //Log.e("Setting", "onFailure: Error");
                             builder.dismiss();
                         }
                     });
@@ -156,15 +149,6 @@ public class SettingProfileActivity extends AppCompatActivity {
                 startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
             }
         });
-
-        b_upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
-
 
     }
 
@@ -202,6 +186,7 @@ public class SettingProfileActivity extends AppCompatActivity {
                     fileUri = data.getData();
                     Glide.with(SettingProfileActivity.this)
                             .load(fileUri)
+                            .centerCrop()
                             .into(profile_pic);
                 }
         }

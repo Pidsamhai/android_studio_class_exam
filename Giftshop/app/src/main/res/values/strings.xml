@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Giftshop</string>
-    <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
@@ -16,4 +15,6 @@
     <string name="my_product">My Product</string>
     <string name="add_product">Add Product</string>
     <string name="about">About</string>
+    <string name="lat">Lat</string>
+    <string name="lon">Lon</string>
 </resources>
