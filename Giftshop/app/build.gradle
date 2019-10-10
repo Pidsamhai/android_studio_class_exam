@@ -45,6 +45,8 @@ dependencies {
 
     // loader layout
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
+    //implementation 'com.asksira.android:loopingviewpager:1.1.4'
     // image Loader
     //implementation 'com.elyeproj.libraries:loaderviewlibrary:2.0.0'
 

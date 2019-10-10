@@ -16,12 +16,91 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/primaryColor"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
+    <RelativeLayout
+        android:background="#eeeeee"
+        android:id="@+id/new_layout"
         android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            tools:ignore="MissingConstraints">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.viewpager.widget.ViewPager
+                    android:animateLayoutChanges="true"
+                    android:id="@+id/last_event"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+                <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+                    android:layout_below="@+id/last_event"
+                    android:layout_marginTop="-60dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/dots_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:dotsColor="@color/primaryTextColor"
+                    app:dotsStrokeColor="@color/primaryTextColor"
+                    app:dotsSize="16dp"
+                    app:dotsSpacing="4dp"
+                    app:dotsStrokeWidth="3dp"
+                    />
+                <Button
+                    android:id="@+id/b_close"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_close_24dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_new"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+    </RelativeLayout>
+
+
+
+
+    <!--<com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:layout_marginTop="-20dp"
+        android:id="@+id/dots_indicator"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/last_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:dotsColor="@color/primaryDarkColor"
+        app:dotsCornerRadius="8dp"
+        app:dotsSize="16dp"
+        app:dotsSpacing="4dp"
+        app:dotsWidthFactor="2.5"
+        app:selectedDotColor="@color/primaryLightColor"
+        app:progressMode="true" />-->
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_below="@id/new_layout"
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:background="#eeeeee"
         android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_product_view"
             android:layout_width="match_parent"
