@@ -69,24 +69,24 @@
             android:elevation="4dp"
             android:stateListAnimator="@null"
             android:id="@+id/b_login"
-            android:layout_width="120dp"
+            android:layout_width="145dp"
             android:layout_height="50dp"
             android:background="@drawable/btn_primary"
             android:text="@string/login"
             android:textColor="@color/primaryTextColor" />
 
         <Button
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:elevation="4dp"
             android:stateListAnimator="@null"
             android:padding="16dp"
             android:layout_margin="10dp"
             android:drawableStart="@drawable/ic_google_24dp"
             android:id="@+id/b_google_login"
-            android:layout_width="120dp"
+            android:layout_width="145dp"
             android:layout_height="50dp"
             android:background="@drawable/btn_google_plus"
-            android:text="@string/login"
+            android:text="@string/google"
             android:textColor="@color/primaryTextColor"/>
 
     </RelativeLayout>

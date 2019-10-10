@@ -11,7 +11,7 @@
             android:title="@string/add_product"/>
         <item
             android:icon="@drawable/ic_shopping_cart_24dp"
-            android:id="@+id/menu_view_pager"
+            android:id="@+id/menu_my_product"
             android:title="@string/my_product"/>
 
         <item

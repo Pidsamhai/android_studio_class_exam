@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,7 +46,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     private AlertDialog builder;
     private static final String TAG = "HomeActivity";
-    private TextView profile_name, profile_email, t_name;
+    private TextView profile_name, profile_email, recycle_no_item;
     private ImageView profile_pic;
     private FirebaseFirestore db;
     private List<Product> products;
@@ -54,6 +55,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private SwipeRefreshLayout swipeRefreshLayout;
     private GoogleSignInOptions gso;
     private GoogleSignInClient googleSignInClient;
+    private static Integer ADDPRODUCT_REQUEST_CODE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,42 +96,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         profile_pic = headerView.findViewById(R.id.drawer_profile_pic);
         recyclerView = findViewById(R.id.recycle_product_view);
         swipeRefreshLayout = findViewById(R.id.refresh_layout);
+        recycle_no_item = findViewById(R.id.recycle_no_item);
 
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-
-        swipeRefreshLayout.setRefreshing(true);
-        db.collection("product")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        products = queryDocumentSnapshots.toObjects(Product.class);
-                        ProductAdapter adapter = new ProductAdapter(HomeActivity.this,products);
-                        recyclerView.setAdapter(adapter);
-                        Log.e(TAG, "onSuccess: Load Complete");
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+        upDateData();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                db.collection("product")
-                        //.whereEqualTo("u_id", firebaseUser.getUid())
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                products = queryDocumentSnapshots.toObjects(Product.class);
-                                ProductAdapter adapter = new ProductAdapter(HomeActivity.this,products);
-                                recyclerView.setAdapter(adapter);
-                                Log.e(TAG, "onSuccess: Load Complete");
-                                swipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
+                upDateData();
             }
         });
 
@@ -156,27 +134,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
-        /*swipeRefreshLayout.setRefreshing(true);
-        db.collection("product")
-                //.whereEqualTo("u_id", firebaseUser.getUid())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        products = queryDocumentSnapshots.toObjects(Product.class);
-                        ProductAdapter adapter = new ProductAdapter(HomeActivity.this,products);
-                        recyclerView.setAdapter(adapter);
-                        Log.e(TAG, "onSuccess: Load Complete");
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
-        //Log.e(TAG, "onStart Uri: " + firebaseUser.getPhotoUrl());
-
-         */
         if (firebaseUser.getDisplayName() != null && firebaseUser.getPhotoUrl() != null) {
             Glide.with(HomeActivity.this)
                     .load(firebaseUser.getPhotoUrl())
@@ -215,21 +175,40 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    private void upDateData(){
+        swipeRefreshLayout.setRefreshing(true);
+        db.collection("product")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        products = queryDocumentSnapshots.toObjects(Product.class);
+                        ProductAdapter adapter = new ProductAdapter(HomeActivity.this,products);
+                        recyclerView.setAdapter(adapter);
+                        Log.e(TAG, "onSuccess: Load Complete");
+                        swipeRefreshLayout.setRefreshing(false);
+                        if(products.isEmpty()){
+                            recycle_no_item.setVisibility(View.VISIBLE);
+                        }else{
+                            recycle_no_item.setVisibility(View.GONE);
+                        }
+                    }
+                });
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        boolean select = true;
         switch (item.getItemId()) {
             case R.id.menu_card_view:
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
                 break;
             case R.id.menu_add_product:
-                //Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
-                select = false;
                 Intent intent = new Intent(HomeActivity.this, AddProductActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,ADDPRODUCT_REQUEST_CODE);
                 break;
-            case R.id.menu_view_pager:
-                Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
+            case R.id.menu_my_product:
+                Intent my_product = new Intent(HomeActivity.this,MyProductActivity.class);
+                startActivityForResult(my_product,ADDPRODUCT_REQUEST_CODE);
                 break;
             case R.id.menu_bottom_navigator:
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
@@ -239,7 +218,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         drawerLayout.closeDrawer(navigationView);
-        return select;
+        return false;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ADDPRODUCT_REQUEST_CODE){
+            upDateData();
+        }
+    }
 }

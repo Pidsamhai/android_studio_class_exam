@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".MyProductActivity">
 
     <androidx.appcompat.widget.Toolbar
         app:titleTextColor="@color/primaryTextColor"
@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <TextView
         android:visibility="gone"
         android:id="@+id/recycle_no_item"
@@ -36,4 +37,5 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
 </RelativeLayout>

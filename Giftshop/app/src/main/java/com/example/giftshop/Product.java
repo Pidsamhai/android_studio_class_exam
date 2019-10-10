@@ -9,6 +9,7 @@ public class Product {
     private String description;
     private String tel;
     private String picture;
+    private String product_id;
 
     public Product() {}
 
@@ -29,6 +30,10 @@ public class Product {
 
     public String getTel() {
         return tel;
+    }
+
+    public String getProduct_id() {
+        return product_id;
     }
 
     public String getPicture() {

@@ -33,7 +33,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
     private Context mContect;
     private List<Product> products;
 
-    public ProductAdapter(Context context, List<Product> dataset) {
+    ProductAdapter(Context context, List<Product> dataset) {
         mContect = context;
         products = dataset;
     }
@@ -63,7 +63,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
         LinearLayout expand_content;
         RelativeLayout call;
 
-        public Holder(@NonNull View itemView) {
+        Holder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             img = itemView.findViewById(R.id.img);
@@ -73,7 +73,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
             t_tel = itemView.findViewById(R.id.t_tel);
         }
 
-        public void setItem(final int position) {
+        void setItem(final int position) {
             title.setText(products.get(position).getName());
             t_tel.setText(products.get(position).getTel());
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();

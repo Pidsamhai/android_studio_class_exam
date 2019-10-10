@@ -124,6 +124,7 @@ public class AddProductActivity extends AppCompatActivity {
     protected void upLoadImg() {
         builder.show();
         final String unique_id = UUID.randomUUID().toString();
+        final String product_id = UUID.randomUUID().toString();
         final StorageReference fileUploadPath = storageReference.child("product/" + unique_id + "." + file_extention);
         uploadTask = fileUploadPath.putFile(fileUri);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -131,6 +132,7 @@ public class AddProductActivity extends AppCompatActivity {
             public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
                 Map<String, Object> productObj = new HashMap<>();
                 productObj.put("u_id", firebaseUser.getUid());
+                productObj.put("product_id", product_id);
                 productObj.put("name", e_product_name.getText().toString());
                 productObj.put("description", e_product_detail.getText().toString());
                 productObj.put("tel", e_product_tel.getText().toString());
