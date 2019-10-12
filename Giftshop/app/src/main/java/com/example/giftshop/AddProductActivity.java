@@ -22,8 +22,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.pm.PackageInfoCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.giftshop.Helper.IntentStringHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +61,6 @@ public class AddProductActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private ArrayList<Uri> fileUri_list;
-    public static final int PICKFILE_RESULT_CODE = 1;
     private String file_extention;
 
     @Override
@@ -109,7 +111,7 @@ public class AddProductActivity extends AppCompatActivity {
                 Intent chooseFile = new Intent(Intent.ACTION_PICK);
                 chooseFile.setType("image/*");
                 chooseFile = Intent.createChooser(chooseFile, "Choose a file");
-                startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+                startActivityForResult(chooseFile, IntentStringHelper.PICKFILE_RESULT_CODE);
             }
         });
 
@@ -147,14 +149,14 @@ public class AddProductActivity extends AppCompatActivity {
                 productObj.put("facebook_url",e_facebook_url.getText().toString());
                 productObj.put("line_url", e_line_url.getText().toString());
                 productObj.put("price",e_price.getText().toString());
-                db.collection("product")
-                        .add(productObj)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                db.collection("product").document(product_id)
+                        .set(productObj)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
+                            public void onSuccess(Void aVoid) {
                                 builder.dismiss();
                                 finish();
-                                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                Log.d(TAG, "DocumentSnapshot written with ID: " + product_id);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -186,15 +188,13 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PICKFILE_RESULT_CODE:
+        if(requestCode == IntentStringHelper.PICKFILE_RESULT_CODE){
                 if (resultCode == -1) {
                     fileUri = data.getData();
                     file_extention = getfileExtension(fileUri);
                     Log.e(TAG, "onActivityResult Extension : " + file_extention);
                     final ImageView imageView = new ImageView(AddProductActivity.this);
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
-                    lp.setMargins(10, 0, 10, 0);
                     imageView.setLayoutParams(lp);
                     imageView.setBackground(getResources().getDrawable(R.drawable.img_border));
                     imageView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -220,6 +220,7 @@ public class AddProductActivity extends AppCompatActivity {
                     });
                     Glide.with(AddProductActivity.this)
                             .load(fileUri)
+                            .centerCrop()
                             .into(imageView);
                     if (fileUri != null){
                         pic_img_btn.setEnabled(false);

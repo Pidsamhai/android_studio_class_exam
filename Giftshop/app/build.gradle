@@ -34,8 +34,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.google.firebase:firebase-firestore:21.1.1'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    //facebook SDK
     implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
 
+    //multidex
     implementation 'com.android.support:multidex:1.0.3'
 
 
@@ -51,10 +54,6 @@ dependencies {
     //loop viewpager
     implementation 'com.asksira.android:loopingviewpager:1.1.4'
     // image Loader
-    //implementation 'com.elyeproj.libraries:loaderviewlibrary:2.0.0'
-    //implementation 'com.androidstudy:tovuti:0.0.1'
-
-
     implementation 'com.github.bumptech.glide:glide:4.10.0'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'

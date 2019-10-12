@@ -16,11 +16,9 @@
         app:titleTextColor="@color/primaryTextColor" />
 
     <RelativeLayout
+        android:layout_below="@id/toolbar"
         android:visibility="visible"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:background="#E4E2E2"
-        android:layout_marginTop="60dp"
         android:orientation="horizontal"
         android:id="@+id/pick_img_layout"
         android:layout_width="match_parent"

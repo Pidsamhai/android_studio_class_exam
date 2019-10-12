@@ -1,6 +1,7 @@
 package com.example.giftshop;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -86,6 +88,8 @@ public class SettingProfileActivity extends AppCompatActivity {
             e_last_name.setText(name[1]);
             Glide.with(SettingProfileActivity.this)
                     .load(firebaseUser.getPhotoUrl())
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
                     .into(profile_pic);
         }
 
@@ -143,10 +147,48 @@ public class SettingProfileActivity extends AppCompatActivity {
         profile_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-                chooseFile.setType("*/*");
+                Intent chooseFile = new Intent(Intent.ACTION_PICK);
+                chooseFile.setType("image/*");
                 chooseFile = Intent.createChooser(chooseFile, "Choose a file");
                 startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+            }
+        });
+
+        profile_pic.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View view) {
+
+                if(fileUri != null){
+                    new AlertDialog.Builder(SettingProfileActivity.this)
+                            .setTitle("Remove picture profile")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    if(firebaseUser.getPhotoUrl() == null){
+
+                                        Glide.with(getApplicationContext())
+                                                .load(R.drawable.ic_profile_24dp)
+                                                .centerCrop()
+                                                .apply(RequestOptions.circleCropTransform())
+                                                .into(profile_pic);
+                                        fileUri = null;
+                                    }else {
+                                        Glide.with(getApplicationContext())
+                                                .load(firebaseUser.getPhotoUrl())
+                                                .centerCrop()
+                                                .apply(RequestOptions.circleCropTransform())
+                                                .into(profile_pic);
+                                        fileUri = null;
+                                    }
+
+                                }
+                            }).setNegativeButton("Cancel",null)
+                            .show();
+                }else{
+
+                }
+                return false;
             }
         });
 

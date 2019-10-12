@@ -11,4 +11,6 @@ public class IntentStringHelper {
     public static String LINE_URL = "LINE_URL";
     public static String LAT = "LAT";
     public static String LON = "LON";
+    public static String PRUDUCT_ID = "PRUDUCT_ID";
+    public static Integer PICKFILE_RESULT_CODE = 1;
 }

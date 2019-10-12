@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".EditProductActivity">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -14,138 +14,287 @@
         android:background="@color/primaryColor"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:titleTextColor="@color/primaryTextColor" />
-    <ScrollView
+
+    <RelativeLayout
+        android:layout_below="@id/toolbar"
+        android:visibility="visible"
+        android:background="#E4E2E2"
+        android:orientation="horizontal"
+        android:id="@+id/pick_img_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
+        android:layout_height="200dp">
+
+        <ImageView
+            android:id="@+id/product_img"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:layout_margin="5dp"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/pick_img_btn"
+            android:src="@drawable/ic_edit_white_24dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <ImageView
+            android:visibility="gone"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/pick_img_btn"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/delete_img_btn"
+            android:src="@drawable/ic_delete_white_24dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/pick_img_layout">
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <RelativeLayout
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="#E4E2E2"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
-                android:id="@+id/pick_img_layout"
+            <LinearLayout
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <ImageView
-                    android:id="@+id/pick_img_btn"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_insert_photo_24dp"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"/>
-
-                <ImageView
-                    android:id="@+id/img_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-
-            </RelativeLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_below="@id/pick_img_layout"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/product_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/product_name">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/e_product_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_below="@id/product_name"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/product_detail"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/product_detail">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/e_product_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textMultiLine" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/product_tel"
-                android:layout_below="@id/product_detail"
-                android:layout_centerHorizontal="true"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/tel">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:maxLength="14"
-                    android:id="@+id/e_product_tel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <RelativeLayout
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/product_tel"
-                android:layout_width="300dp"
                 android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_alignParentStart="true"
-                    android:layout_centerHorizontal="true"
+
+                    android:id="@+id/product_name"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="150dp"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="@string/lat">
+                    android:hint="@string/product_name">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:maxLength="14"
-                        android:id="@+id/e_product_lat"
+                        android:id="@+id/e_product_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/product_price"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/price">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/e_product_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
+                    android:id="@+id/product_detail"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="150dp"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="@string/lon">
+                    android:hint="@string/product_detail">
+
                     <com.google.android.material.textfield.TextInputEditText
-                        android:maxLength="14"
-                        android:id="@+id/e_product_lon"
+                        android:id="@+id/e_product_detail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textMultiLine" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-            </RelativeLayout>
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/contact"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <ImageView
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_contacts_24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </LinearLayout>
 
-        </RelativeLayout>
-    </ScrollView>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/product_tel"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/tel">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/e_product_tel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="14" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <ImageView
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_location_24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:hint="@string/lat">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/e_lat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:maxLength="14" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:hint="@string/lon">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/e_lon"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:maxLength="14" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/facebook" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_facebook" />
+                </LinearLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/e_facebook_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="14" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="300dp"
+                    app:helperText="* Example fb.com/meng.anantasak"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/url">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/e_facebook_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="14" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/line" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_line" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="300dp"
+                    app:helperText="*Example http://line.me/ti/p/uuDFjdnsgy"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="70dp"
+                    android:hint="@string/line_url">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/e_line_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="14" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
     <Button
         android:id="@+id/b_save"
-        android:layout_marginTop="-50dp"
+        android:layout_alignParentBottom="true"
         android:text="@string/save"
         android:background="@color/primaryLightColor"
         android:textColor="@color/primaryTextColor"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
-</LinearLayout>
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
