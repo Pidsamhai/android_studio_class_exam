@@ -14,7 +14,6 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -46,7 +44,7 @@ public class AddProductActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private Button b_save;
-    private EditText e_product_name, e_product_detail, e_product_tel;
+    private EditText e_product_name, e_product_detail, e_product_tel,e_facebook_name,e_facebook_url, e_line_url,e_lat,e_lon,e_price;
     private FirebaseAuth firebaseAuth;
     //private FloatingActionButton f_add_product;
     private FirebaseUser firebaseUser;
@@ -84,6 +82,12 @@ public class AddProductActivity extends AppCompatActivity {
         e_product_name = findViewById(R.id.e_product_name);
         e_product_detail = findViewById(R.id.e_product_detail);
         e_product_tel = findViewById(R.id.e_product_tel);
+        e_facebook_name = findViewById(R.id.e_facebook_name);
+        e_facebook_url = findViewById(R.id.e_facebook_url);
+        e_line_url = findViewById(R.id.e_line_url);
+        e_lat = findViewById(R.id.e_lat);
+        e_lon = findViewById(R.id.e_lon);
+        e_price = findViewById(R.id.e_product_price);
         pic_img_btn = findViewById(R.id.pick_img_btn);
         img_layout = findViewById(R.id.img_layout);
         fileUri_list = new ArrayList<>();
@@ -137,6 +141,12 @@ public class AddProductActivity extends AppCompatActivity {
                 productObj.put("description", e_product_detail.getText().toString());
                 productObj.put("tel", e_product_tel.getText().toString());
                 productObj.put("picture", unique_id + "." + file_extention);
+                productObj.put("lat",e_lat.getText().toString());
+                productObj.put("lon",e_lon.getText().toString());
+                productObj.put("facebook_name",e_facebook_name.getText().toString());
+                productObj.put("facebook_url",e_facebook_url.getText().toString());
+                productObj.put("line_url", e_line_url.getText().toString());
+                productObj.put("price",e_price.getText().toString());
                 db.collection("product")
                         .add(productObj)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

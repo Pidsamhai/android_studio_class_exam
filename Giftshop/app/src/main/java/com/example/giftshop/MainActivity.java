@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         final Button b_login = findViewById(R.id.b_login);
-        //final LoginButton b_facebook_login = findViewById(R.id.b_facebook_login);
         final Button b_google_login = findViewById(R.id.b_google_login);
         final EditText email = findViewById(R.id.e_email);
         final EditText password = findViewById(R.id.e_password);

@@ -1,4 +1,4 @@
-package com.example.giftshop;
+package com.example.giftshop.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,6 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.giftshop.EditProductActivity;
+import com.example.giftshop.Model.Product;
+import com.example.giftshop.ProductItemInfoActivity;
+import com.example.giftshop.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,7 +48,14 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
     private List<Product> products;
     private Activity mactivity;
 
-    EditProductAdapter(Activity activity, Context context, List<Product> dataset) {
+    private String IMAGE_URL = "IMAGE_URL";
+    private String PRODUCT_NAME = "PRODUCT_NAME";
+    private String PRODUCT_DESCRIPTION = "PRODUCT_DESCRIPTION";
+    private String PRODUCT_TEL = "PRODUCT_TEL";
+    public String LAT = "LAT";
+    public String LON = "LON";
+
+    public EditProductAdapter(Activity activity, Context context, List<Product> dataset) {
         mContect = context;
         products = dataset;
         mactivity = activity;
@@ -118,6 +130,26 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" + products.get(position).getTel()));
                     mContect.startActivity(intent);
+                }
+            });
+
+            b_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContect,"click",Toast.LENGTH_LONG).show();
+                    final Intent intent = new Intent(mactivity, EditProductActivity.class);
+                    fileUploadPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                       @Override
+                       public void onSuccess(Uri uri) {
+                           intent.putExtra(IMAGE_URL,uri.toString());
+                           intent.putExtra(PRODUCT_NAME,products.get(position).getName());
+                           intent.putExtra(PRODUCT_DESCRIPTION,products.get(position).getDescription());
+                           intent.putExtra(PRODUCT_TEL,products.get(position).getTel());
+                           mactivity.startActivity(intent);
+                       }
+                   });
+
+
                 }
             });
 

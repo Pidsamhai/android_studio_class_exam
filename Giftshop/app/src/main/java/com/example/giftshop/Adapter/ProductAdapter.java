@@ -1,4 +1,4 @@
-package com.example.giftshop;
+package com.example.giftshop.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,19 +21,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.giftshop.Helper.IntentStringHelper;
+import com.example.giftshop.Model.Product;
+import com.example.giftshop.ProductItemInfoActivity;
+import com.example.giftshop.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> {
-    private String[] mDataSet;
     private Context mContect;
     private List<Product> products;
 
-    ProductAdapter(Context context, List<Product> dataset) {
+    public ProductAdapter(Context context, List<Product> dataset) {
         mContect = context;
         products = dataset;
     }
@@ -110,10 +114,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
                         @Override
                         public void onClick(View view) {
                             String transitionName = ViewCompat.getTransitionName(view);
-                            Log.e("IMG", "onClick: " + transitionName);
+                            //Log.e("IMG", "onClick: " + transitionName);
                             ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContect, view, transitionName);
                             Intent intent = new Intent(itemView.getContext(), ProductItemInfoActivity.class);
-                            intent.putExtra("IMG_URL", uri.toString());
+                            intent.putExtra(IntentStringHelper.IMAGE_URL, uri.toString());
+                            intent.putExtra(IntentStringHelper.PRODUCT_NAME, products.get(position).getName());
+                            intent.putExtra(IntentStringHelper.PRODUCT_PRICE, products.get(position).getPrice());
+                            intent.putExtra(IntentStringHelper.PRODUCT_TEL, products.get(position).getTel());
+                            intent.putExtra(IntentStringHelper.PRODUCT_DESCRIPTION, products.get(position).getDescription());
+                            intent.putExtra(IntentStringHelper.FACEBOOK_NAME, products.get(position).getFacebook_name());
+                            intent.putExtra(IntentStringHelper.FACEBOOK_URL, products.get(position).getFacebook_url());
+                            intent.putExtra(IntentStringHelper.LINE_URL, products.get(position).getLine_url());
+                            intent.putExtra(IntentStringHelper.LAT, products.get(position).getLat());
+                            intent.putExtra(IntentStringHelper.LON, products.get(position).getLon());
                             mContect.startActivity(intent, activityOptionsCompat.toBundle());
                         }
                     });
@@ -122,7 +135,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
                             .centerCrop()
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(img);
-                    Log.e("Adaptter", "onSuccess: " + uri);
+                    //Log.e("Adaptter", "onSuccess: " + uri);
                 }
             });
 

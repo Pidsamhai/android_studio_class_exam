@@ -45,10 +45,14 @@ dependencies {
 
     // loader layout
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
-    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
-    //implementation 'com.asksira.android:loopingviewpager:1.1.4'
+    //implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
+    //PageIndicatorView
+    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+    //loop viewpager
+    implementation 'com.asksira.android:loopingviewpager:1.1.4'
     // image Loader
     //implementation 'com.elyeproj.libraries:loaderviewlibrary:2.0.0'
+    //implementation 'com.androidstudy:tovuti:0.0.1'
 
 
     implementation 'com.github.bumptech.glide:glide:4.10.0'

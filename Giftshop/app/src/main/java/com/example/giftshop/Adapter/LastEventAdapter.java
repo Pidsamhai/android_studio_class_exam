@@ -1,18 +1,17 @@
-package com.example.giftshop;
+package com.example.giftshop.Adapter;
 
 import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.example.giftshop.Model.Product;
+import com.example.giftshop.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -28,7 +27,7 @@ public class LastEventAdapter extends PagerAdapter {
         mContext = context;
     }
 
-    LastEventAdapter(Context context, List<Product> p){
+    public LastEventAdapter(Context context, List<Product> p){
         mContext = context;
         products = p;
     }

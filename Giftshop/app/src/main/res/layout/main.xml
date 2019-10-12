@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/home_context"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -27,7 +28,7 @@
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="100dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
@@ -38,30 +39,32 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <androidx.viewpager.widget.ViewPager
-                    android:animateLayoutChanges="true"
-                    android:id="@+id/last_event"
+                <com.asksira.loopingviewpager.LoopingViewPager
+                    android:id="@+id/viewpager_loop"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"/>
-                <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
-                    android:layout_below="@+id/last_event"
-                    android:layout_marginTop="-60dp"
-                    android:layout_centerHorizontal="true"
-                    android:id="@+id/dots_indicator"
+                    android:layout_height="match_parent"
+                    app:isInfinite="true"
+                    app:autoScroll="true"
+                    app:scrollInterval="5000"
+                    app:viewpagerAspectRatio="0"/>
+                <com.rd.PageIndicatorView
+                    android:layout_marginTop="-50dp"
+                    android:layout_below="@+id/viewpager_loop"
+                    android:id="@+id/pageIndicator"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:dotsColor="@color/primaryTextColor"
-                    app:dotsStrokeColor="@color/primaryTextColor"
-                    app:dotsSize="16dp"
-                    app:dotsSpacing="4dp"
-                    app:dotsStrokeWidth="3dp"
-                    />
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    app:piv_animationType="worm"
+                    app:piv_dynamicCount="true"
+                    app:piv_interactiveAnimation="true"
+                    app:piv_selectedColor="@color/primaryTextColor"
+                    app:piv_unselectedColor="@color/selected"/>
                 <Button
                     android:id="@+id/b_close"
                     android:layout_alignParentEnd="true"
-                    android:background="@drawable/ic_close_24dp"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"/>
+                    android:background="@drawable/ic_minimize_24dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"/>
             </RelativeLayout>
 
             <ImageView

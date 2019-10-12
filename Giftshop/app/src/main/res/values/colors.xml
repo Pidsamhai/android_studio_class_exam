@@ -7,4 +7,5 @@
     <color name="secondaryTextColor">#000000</color>
     <color name="grey">#4D5A5959</color>
     <color name="google_plus">#F44336</color>
+    <color name="selected">#72FFFFFF</color>
 </resources>

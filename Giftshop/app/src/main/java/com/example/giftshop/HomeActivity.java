@@ -1,8 +1,10 @@
 package com.example.giftshop;
 
-import android.animation.Animator;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,23 +27,30 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
 
+import com.asksira.loopingviewpager.LoopingPagerAdapter;
+import com.asksira.loopingviewpager.LoopingViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.giftshop.Adapter.LastEventAdapter_loop;
+import com.example.giftshop.Adapter.ProductAdapter;
+import com.example.giftshop.Model.Product;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
-import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
+import com.rd.PageIndicatorView;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -59,10 +69,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private GoogleSignInOptions gso;
     private GoogleSignInClient googleSignInClient;
     private static Integer ADDPRODUCT_REQUEST_CODE = 10;
-    private ViewPager viewPager;
-    private WormDotsIndicator indicator;
     private RelativeLayout new_layout;
     private Button b_close;
+    private LoopingViewPager viewPager_loop;
+    private PageIndicatorView pageIndicatorView;
+    private Timer timer;
+    private View context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +92,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
+        context = findViewById(R.id.home_context);
 
 
         LayoutInflater layoutInflater = getLayoutInflater();
@@ -87,6 +101,76 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                 .setCancelable(false)
                 .create();
+
+        final Snackbar snackbar = Snackbar.make(context, "No internet connection !", Snackbar.LENGTH_INDEFINITE);
+        final View snackbarView = snackbar.getView();
+
+
+        timer = new Timer();
+        timer.schedule(new TimerTask()
+        {
+            boolean show = true;
+            boolean net_state = true;
+
+            @Override
+            public void run()
+            {
+                ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                assert manager != null;
+                boolean is3g = Objects.requireNonNull(manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE))
+                        .isConnectedOrConnecting();
+
+                boolean isWifi = Objects.requireNonNull(manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI))
+                        .isConnectedOrConnecting();
+
+                if(net_state && show){
+                    if (!is3g && !isWifi) {
+                        runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        snackbar.setAction("close", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                snackbar.dismiss();
+                                            }
+                                        });
+                                        snackbar.setActionTextColor(Color.parseColor("#ffffff"));
+                                        snackbarView.setBackgroundColor(Color.parseColor("#fc0303"));
+                                        snackbar.show();
+                                        net_state = false;
+                                        show = false;
+                                    }
+                                }
+                        );
+
+                    }
+                }else if (!net_state && !show){
+                    runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    snackbar.setText("Connected !");
+                                    snackbar.setAction("close", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            snackbar.dismiss();
+                                        }
+                                    });
+                                    snackbar.setActionTextColor(Color.parseColor("#ffffff"));
+                                    snackbarView.setBackgroundColor(Color.parseColor("#03fc49"));
+                                    snackbar.show();
+                                    net_state = true;
+                                }
+                            }
+                    );
+
+                }
+
+            }
+        }, 0, 3000);
+
+
 
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -104,10 +188,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         recyclerView = findViewById(R.id.recycle_product_view);
         swipeRefreshLayout = findViewById(R.id.refresh_layout);
         recycle_no_item = findViewById(R.id.recycle_no_item);
-        viewPager = findViewById(R.id.last_event);
-        indicator = findViewById(R.id.dots_indicator);
         b_close = findViewById(R.id.b_close);
         new_layout = findViewById(R.id.new_layout);
+        viewPager_loop = findViewById(R.id.viewpager_loop);
+        pageIndicatorView = findViewById(R.id.pageIndicator);
+
+
 
         b_close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,9 +210,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         final List<Product> _product;
                         _product = queryDocumentSnapshots.toObjects(Product.class);
-                        final LastEventAdapter adapter = new LastEventAdapter(HomeActivity.this,_product);
-                        viewPager.setAdapter(adapter);
-                        indicator.setViewPager(viewPager);
+                        final LoopingPagerAdapter adapter = new LastEventAdapter_loop(HomeActivity.this,_product,true);
+
+                        viewPager_loop.setAdapter(adapter);
+                        //viewPager.setAdapter(adapter);
+                        pageIndicatorView.setCount(viewPager_loop.getIndicatorCount());
+                        viewPager_loop.setIndicatorPageChangeListener(new LoopingViewPager.IndicatorPageChangeListener() {
+                            @Override
+                            public void onIndicatorProgress(int selectingPosition, float progress) {
+
+                            }
+
+                            @Override
+                            public void onIndicatorPageChange(int newIndicatorPosition) {
+                                pageIndicatorView.setSelection(newIndicatorPosition);
+                            }
+                        });
                     }
                 });
 
@@ -265,5 +364,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (requestCode == ADDPRODUCT_REQUEST_CODE) {
             upDateData();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewPager_loop.pauseAutoScroll();
+    }
+
+    @Override
+    protected void onPause() {
+        viewPager_loop.pauseAutoScroll();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        timer.cancel();
+        super.onDestroy();
     }
 }
