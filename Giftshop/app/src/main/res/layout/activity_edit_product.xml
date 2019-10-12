@@ -177,8 +177,7 @@
                             android:id="@+id/e_lat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:maxLength="14" />
+                            android:inputType="numberDecimal" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -194,8 +193,7 @@
                             android:id="@+id/e_lon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:maxLength="14" />
+                            android:inputType="numberDecimal"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </RelativeLayout>
 
@@ -228,9 +226,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/e_facebook_name"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:maxLength="14" />
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -244,9 +240,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/e_facebook_url"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:maxLength="14" />
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -280,8 +274,8 @@
                         android:id="@+id/e_line_url"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:maxLength="14" />
+                        android:inputType="textUri"
+                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>

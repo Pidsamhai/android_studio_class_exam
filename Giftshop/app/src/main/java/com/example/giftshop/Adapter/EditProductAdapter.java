@@ -75,11 +75,10 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView title, t_tel;
+        TextView title;
         ImageView img;
         Button b_expand, b_delete, b_edit;
         LinearLayout expand_content;
-        RelativeLayout call;
         AlertDialog.Builder alertDialog;
         FirebaseFirestore db;
         AlertDialog builder;
@@ -90,8 +89,6 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
             img = itemView.findViewById(R.id.img);
             b_expand = itemView.findViewById(R.id.b_expand);
             expand_content = itemView.findViewById(R.id.expand_content);
-            call = itemView.findViewById(R.id.call);
-            t_tel = itemView.findViewById(R.id.t_tel);
             b_delete = itemView.findViewById(R.id.b_delete);
             b_edit = itemView.findViewById(R.id.b_edit);
             db = FirebaseFirestore.getInstance();
@@ -99,7 +96,6 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
 
         void setItem(final int position) {
             title.setText(products.get(position).getName());
-            t_tel.setText(products.get(position).getTel());
             b_delete.setVisibility(View.VISIBLE);
             b_edit.setVisibility(View.VISIBLE);
             final FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -113,15 +109,6 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                     .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                     .setCancelable(false)
                     .create();
-
-            call.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + products.get(position).getTel()));
-                    mContect.startActivity(intent);
-                }
-            });
 
             b_edit.setOnClickListener(new View.OnClickListener() {
                 @Override

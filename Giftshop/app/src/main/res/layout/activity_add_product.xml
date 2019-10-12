@@ -273,8 +273,7 @@
                         android:id="@+id/e_line_url"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:maxLength="14" />
+                        android:inputType="textUri"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>

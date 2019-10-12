@@ -1,5 +1,6 @@
 package com.example.giftshop.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +21,9 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giftshop.Helper.IntentStringHelper;
 import com.example.giftshop.Model.Product;
 import com.example.giftshop.ProductItemInfoActivity;
@@ -61,34 +64,72 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView title,t_tel;
-        ImageView img;
+        TextView title,profile_name,product_price;
+        ImageView img,facebook,line,location,call,profile_pic;
         Button b_expand;
         LinearLayout expand_content;
-        RelativeLayout call;
 
         Holder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
+            profile_name = itemView.findViewById(R.id.profile_name);
+            product_price = itemView.findViewById(R.id.product_price);
             img = itemView.findViewById(R.id.img);
             b_expand = itemView.findViewById(R.id.b_expand);
             expand_content = itemView.findViewById(R.id.expand_content);
-            call = itemView.findViewById(R.id.call);
-            t_tel = itemView.findViewById(R.id.t_tel);
+            facebook = itemView.findViewById(R.id.img_facebook);
+            line = itemView.findViewById(R.id.img_line);
+            call = itemView.findViewById(R.id.img_call);
+            location = itemView.findViewById(R.id.img_location);
+            profile_pic = itemView.findViewById(R.id.img_profile);
         }
 
         void setItem(final int position) {
             title.setText(products.get(position).getName());
-            t_tel.setText(products.get(position).getTel());
+            product_price.setText("ราคา ( " + products.get(position).getPrice() + " ) ฿");
+            profile_name.setText(products.get(position).getU_name());
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
             StorageReference storageReference = firebaseStorage.getReferenceFromUrl("gs://pcru-giftshop.appspot.com");
             StorageReference fileUploadPath = storageReference.child("product/" + products.get(position).getPicture());
+
+            Glide.with(mContect)
+                    .load(products.get(position).getU_pic())
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profile_pic);
 
             call.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:"+products.get(position).getTel()));
+                    intent.setData(Uri.parse("tel:" + products.get(position).getTel()));
+                    mContect.startActivity(intent);
+                }
+            });
+
+            facebook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String url = products.get(position).getFacebook_url();
+                    url = url.replace("http://","");
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + url));
+                    mContect.startActivity(intent);
+                }
+            });
+
+            location.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String strUri = "http://maps.google.com/maps?q=loc:" + products.get(position).getLat() + "," + products.get(position).getLon();
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
+                    mContect.startActivity(intent);
+                }
+            });
+
+            line.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(products.get(position).getLine_url()));
                     mContect.startActivity(intent);
                 }
             });

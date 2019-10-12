@@ -138,6 +138,8 @@ public class AddProductActivity extends AppCompatActivity {
             public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
                 Map<String, Object> productObj = new HashMap<>();
                 productObj.put("u_id", firebaseUser.getUid());
+                productObj.put("u_name", firebaseUser.getDisplayName());
+                productObj.put("u_pic", Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString());
                 productObj.put("product_id", product_id);
                 productObj.put("name", e_product_name.getText().toString());
                 productObj.put("description", e_product_detail.getText().toString());

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class Product extends ArrayList<String> {
 
     private String u_id;
+    private String u_name;
+    private String u_pic;
     private String name;
     private String description;
     private String tel;
@@ -24,6 +26,8 @@ public class Product extends ArrayList<String> {
     public Product(String u_id,String name,String description,String tel,String picture){}
     public Product(
             String u_id,
+            String u_name,
+            String u_pic,
             String name,
             String description,
             String tel,
@@ -39,6 +43,14 @@ public class Product extends ArrayList<String> {
 
     public String getU_id() {
         return u_id;
+    }
+
+    public String getU_name() {
+        return u_name;
+    }
+
+    public String getU_pic() {
+        return u_pic;
     }
 
     public String getName() {

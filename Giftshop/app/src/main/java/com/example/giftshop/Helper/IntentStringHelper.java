@@ -7,7 +7,7 @@ public class IntentStringHelper {
     public static String PRODUCT_TEL = "PRODUCT_TEL";
     public static String PRODUCT_PRICE = "PRODUCT_PRICE";
     public static String FACEBOOK_URL = "FACEBOOK_URL";
-    public static String FACEBOOK_NAME = "PRODUCT_PRICE";
+    public static String FACEBOOK_NAME = "FACEBOOK_NAME";
     public static String LINE_URL = "LINE_URL";
     public static String LAT = "LAT";
     public static String LON = "LON";

@@ -317,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     builder.dismiss();
                     startActivity(intent);
+                    finish();
                 }
             }, 1000);
 
