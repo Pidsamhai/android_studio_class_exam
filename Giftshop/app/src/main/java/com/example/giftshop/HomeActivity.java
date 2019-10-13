@@ -1,7 +1,6 @@
 package com.example.giftshop;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +47,7 @@ import com.rd.PageIndicatorView;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -107,14 +106,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         timer = new Timer();
-        timer.schedule(new TimerTask()
-        {
+        timer.schedule(new TimerTask() {
             boolean show = true;
             boolean net_state = true;
 
             @Override
-            public void run()
-            {
+            public void run() {
                 ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
                 assert manager != null;
                 boolean is3g = Objects.requireNonNull(manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE))
@@ -123,7 +120,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 boolean isWifi = Objects.requireNonNull(manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI))
                         .isConnectedOrConnecting();
 
-                if(net_state && show){
+                if (net_state && show) {
                     if (!is3g && !isWifi) {
                         runOnUiThread(
                                 new Runnable() {
@@ -145,7 +142,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         );
 
                     }
-                }else if (!net_state && !show){
+                } else if (!net_state && !show) {
                     runOnUiThread(
                             new Runnable() {
                                 @Override
@@ -171,8 +168,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }, 0, 3000);
 
 
-
-
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
@@ -194,7 +189,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         pageIndicatorView = findViewById(R.id.pageIndicator);
 
 
-
         b_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,36 +196,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        db.collection("product")
-                .limit(3)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        final List<Product> _product;
-                        _product = queryDocumentSnapshots.toObjects(Product.class);
-                        final LoopingPagerAdapter adapter = new LastEventAdapter_loop(HomeActivity.this,_product,true);
 
-                        viewPager_loop.setAdapter(adapter);
-                        //viewPager.setAdapter(adapter);
-                        pageIndicatorView.setCount(viewPager_loop.getIndicatorCount());
-                        viewPager_loop.setIndicatorPageChangeListener(new LoopingViewPager.IndicatorPageChangeListener() {
-                            @Override
-                            public void onIndicatorProgress(int selectingPosition, float progress) {
-
-                            }
-
-                            @Override
-                            public void onIndicatorPageChange(int newIndicatorPosition) {
-                                pageIndicatorView.setSelection(newIndicatorPosition);
-                            }
-                        });
-                    }
-                });
-
-
-
-
+        updateNewItem();
 
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -243,6 +209,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onRefresh() {
                 upDateData();
+                updateNewItem();
             }
         });
 
@@ -271,17 +238,38 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        if (firebaseUser.getDisplayName() != null && firebaseUser.getPhotoUrl() != null) {
+        if (firebaseUser.getPhotoUrl() != null) {
             Glide.with(HomeActivity.this)
                     .load(firebaseUser.getPhotoUrl())
                     .centerCrop()
                     .apply(RequestOptions.circleCropTransform())
                     .into(profile_pic);
-            profile_name.setText(firebaseUser.getDisplayName());
-            profile_email.setText(firebaseUser.getEmail());
+        } else {
+            Integer[] avatar = {
+                    R.drawable.ic_avatar_1,
+                    R.drawable.ic_avatar_2,
+                    R.drawable.ic_avatar_3,
+                    R.drawable.ic_avatar_4,
+                    R.drawable.ic_avatar_5,
+                    R.drawable.ic_avatar_6,
+                    R.drawable.ic_avatar_7,
+                    R.drawable.ic_avatar_8,
+                    R.drawable.ic_avatar_9,
+            };
+            Integer index = new Random().nextInt(9);
+            Glide.with(HomeActivity.this)
+                    .load(avatar[index])
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profile_pic);
         }
+        if (firebaseUser.getDisplayName() != null && !firebaseUser.getDisplayName().isEmpty()) {
+            profile_name.setText(firebaseUser.getDisplayName());
+        }else{
+            profile_name.setText("Unknown");
+        }
+        profile_email.setText(firebaseUser.getEmail());
     }
-
 
 
     void fireBaseLogout() {
@@ -323,7 +311,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         recyclerView.setAdapter(adapter);
                         Log.e(TAG, "onSuccess: Load Complete");
                         swipeRefreshLayout.setRefreshing(false);
-                        new_layout.setVisibility(View.VISIBLE);
                         if (products.isEmpty()) {
                             recycle_no_item.setVisibility(View.VISIBLE);
                         } else {
@@ -363,6 +350,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADDPRODUCT_REQUEST_CODE) {
             upDateData();
+            updateNewItem();
         }
     }
 
@@ -370,6 +358,35 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         viewPager_loop.pauseAutoScroll();
+    }
+
+    private void updateNewItem(){
+        db.collection("product")
+                .limit(3)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        final List<Product> _product;
+                        _product = queryDocumentSnapshots.toObjects(Product.class);
+                        final LoopingPagerAdapter adapter = new LastEventAdapter_loop(HomeActivity.this, _product, true);
+                        if (_product.size() == 0) new_layout.setVisibility(View.GONE);
+                        else new_layout.setVisibility(View.VISIBLE);
+                        viewPager_loop.setAdapter(adapter);
+                        pageIndicatorView.setCount(viewPager_loop.getIndicatorCount());
+                        viewPager_loop.setIndicatorPageChangeListener(new LoopingViewPager.IndicatorPageChangeListener() {
+                            @Override
+                            public void onIndicatorProgress(int selectingPosition, float progress) {
+
+                            }
+
+                            @Override
+                            public void onIndicatorPageChange(int newIndicatorPosition) {
+                                pageIndicatorView.setSelection(newIndicatorPosition);
+                            }
+                        });
+                    }
+                });
     }
 
     @Override

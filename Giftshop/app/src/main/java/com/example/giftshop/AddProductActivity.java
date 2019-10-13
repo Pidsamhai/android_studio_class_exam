@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -119,6 +120,27 @@ public class AddProductActivity extends AppCompatActivity {
         b_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(e_product_name.getText().toString().trim().isEmpty() || e_product_name.getText() == null){
+                    Toast.makeText(AddProductActivity.this,"cbdvcyvdhc",Toast.LENGTH_LONG).show();
+                    e_product_name.requestFocus();
+                    return;
+                }
+                if(e_price.getText().toString().trim().isEmpty() && e_price.getText() == null || e_price.getText().toString().trim().length() == 0){
+                    e_price.requestFocus();
+                    return;
+                }
+                if(e_product_detail.getText().toString().trim().isEmpty() || e_product_detail.getText() == null){
+                    e_product_detail.requestFocus();
+                    return;
+                }
+                if(e_product_tel.getText().toString().trim().isEmpty() || e_product_tel.getText() == null){
+                    e_product_tel.requestFocus();
+                    return;
+                }
+                if(fileUri == null){
+                    return;
+                }
+
                 upLoadImg();
             }
         });
@@ -139,17 +161,17 @@ public class AddProductActivity extends AppCompatActivity {
                 Map<String, Object> productObj = new HashMap<>();
                 productObj.put("u_id", firebaseUser.getUid());
                 productObj.put("u_name", firebaseUser.getDisplayName());
-                productObj.put("u_pic", Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString());
+                productObj.put("u_pic", firebaseUser.getPhotoUrl() == null ? "" : firebaseUser.getPhotoUrl().toString());
                 productObj.put("product_id", product_id);
                 productObj.put("name", e_product_name.getText().toString());
                 productObj.put("description", e_product_detail.getText().toString());
                 productObj.put("tel", e_product_tel.getText().toString());
                 productObj.put("picture", unique_id + "." + file_extention);
-                productObj.put("lat",e_lat.getText().toString());
-                productObj.put("lon",e_lon.getText().toString());
-                productObj.put("facebook_name",e_facebook_name.getText().toString());
-                productObj.put("facebook_url",e_facebook_url.getText().toString());
-                productObj.put("line_url", e_line_url.getText().toString());
+                productObj.put("lat",e_lat.getText().toString().trim());
+                productObj.put("lon",e_lon.getText().toString().trim());
+                productObj.put("facebook_name",e_facebook_name.getText().toString().trim());
+                productObj.put("facebook_url",e_facebook_url.getText().toString().trim());
+                productObj.put("line_url", e_line_url.getText().toString().trim());
                 productObj.put("price",e_price.getText().toString());
                 db.collection("product").document(product_id)
                         .set(productObj)

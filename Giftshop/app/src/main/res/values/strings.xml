@@ -28,4 +28,5 @@
     <string name="price">Price</string>
     <string name="line_url">Line Url</string>
     <string name="description">Description</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>

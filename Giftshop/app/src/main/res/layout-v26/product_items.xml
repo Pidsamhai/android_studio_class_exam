@@ -36,31 +36,33 @@
                 android:background="@color/grey"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"/>
-            <RelativeLayout
+            <LinearLayout
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="75dp">
                 <TextView
+                    android:layout_marginBottom="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:id="@+id/title"
-                    android:textSize="30sp"
                     android:text="name"
                     android:textColor="@color/secondaryTextColor"
-                    android:layout_width="wrap_content"
+                    android:layout_height="15dp"
+                    android:layout_width="match_parent"
                     android:autoSizeTextType="uniform"/>
 
                 <TextView
+                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_alignParentEnd="true"
                     android:id="@+id/product_price"
-                    android:textSize="30sp"
+                    android:textSize="20sp"
                     android:text="ราคา (300 ฿)"
                     android:textColor="@color/secondaryTextColor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            </RelativeLayout>
+            </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp">

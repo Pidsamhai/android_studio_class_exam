@@ -80,14 +80,13 @@ public class MainActivity extends AppCompatActivity {
         final EditText password = findViewById(R.id.e_password);
         final TextInputLayout l_email = findViewById(R.id.email);
         final TextInputLayout l_password = findViewById(R.id.password);
-
+        final Button b_registetr = findViewById(R.id.b_register);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
         googleSignInClient = GoogleSignIn.getClient(this, gso);
-
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(MainActivity.this)
@@ -109,13 +108,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                // ...
+
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                // ...
+
+            }
+        });
+
+
+        b_registetr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,RegisterActivity.class);
+                startActivity(intent);
             }
         });
 

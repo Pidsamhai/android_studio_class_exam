@@ -104,6 +104,7 @@
                             tools:ignore="RtlHardcoded" />
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/l_call"
                         android:layout_marginTop="30dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -125,8 +126,8 @@
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/l_facebook"
                         android:layout_marginTop="30dp"
-
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:layout_marginStart="10dp"
@@ -147,6 +148,7 @@
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/l_line"
                         android:layout_marginTop="30dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -168,6 +170,7 @@
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/l_location"
                         android:layout_marginTop="30dp"
                         android:layout_marginBottom="40dp"
                         android:gravity="center_vertical"

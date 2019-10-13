@@ -11,5 +11,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:fontFamily">@font/kanit_regular</item>
     </style>
 </resources>

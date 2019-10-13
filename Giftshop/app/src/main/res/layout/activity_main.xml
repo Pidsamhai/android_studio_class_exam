@@ -10,13 +10,13 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:background="#eeeeee"
+        android:src="@drawable/ic_logo"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/toolbar"
         android:id="@+id/img_logo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_below="@id/img_logo"
@@ -107,6 +107,7 @@
             android:layout_gravity="center_horizontal"
             />
         <Button
+            android:id="@+id/b_register"
             android:layout_margin="10dp"
             android:elevation="4dp"
             android:stateListAnimator="@null"

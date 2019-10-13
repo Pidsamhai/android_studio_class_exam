@@ -1,5 +1,6 @@
 package com.example.giftshop.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giftshop.EditProductActivity;
 import com.example.giftshop.Helper.IntentStringHelper;
 import com.example.giftshop.Model.Product;
@@ -52,7 +54,6 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
     public EditProductAdapter(Context context, List<Product> dataset) {
         mContect = context;
         products = dataset;
-        ;
     }
 
 
@@ -75,8 +76,8 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView title;
-        ImageView img;
+        TextView title,product_price;
+        ImageView img,profile_pic;
         Button b_expand, b_delete, b_edit;
         LinearLayout expand_content;
         AlertDialog.Builder alertDialog;
@@ -86,18 +87,23 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
         Holder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
+            product_price = itemView.findViewById(R.id.product_price);
             img = itemView.findViewById(R.id.img);
             b_expand = itemView.findViewById(R.id.b_expand);
             expand_content = itemView.findViewById(R.id.expand_content);
             b_delete = itemView.findViewById(R.id.b_delete);
             b_edit = itemView.findViewById(R.id.b_edit);
             db = FirebaseFirestore.getInstance();
+            profile_pic = itemView.findViewById(R.id.img_profile);
         }
 
+        @SuppressLint("DefaultLocale")
         void setItem(final int position) {
             title.setText(products.get(position).getName());
             b_delete.setVisibility(View.VISIBLE);
             b_edit.setVisibility(View.VISIBLE);
+            Double _price = Double.parseDouble(products.get(position).getPrice());
+            product_price.setText(String.format("ราคา ( %,.2f ) ฿",_price).replace(".00",""));
             final FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
             final StorageReference storageReference = firebaseStorage.getReferenceFromUrl("gs://pcru-giftshop.appspot.com");
             final StorageReference fileUploadPath = storageReference.child("product/" + products.get(position).getPicture());
@@ -110,10 +116,17 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                     .setCancelable(false)
                     .create();
 
+            if(!products.get(position).getU_pic().isEmpty() && products.get(position).getU_pic() != null){
+                Glide.with(mContect)
+                        .load(products.get(position).getU_pic())
+                        .centerCrop()
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(profile_pic);
+            }
+
             b_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Toast.makeText(mContect, "click", Toast.LENGTH_LONG).show();
                     final Intent intent = new Intent(mactivity, EditProductActivity.class);
                     intent.putExtra(IntentStringHelper.PRUDUCT_ID, products.get(position).getProduct_id());
                     mactivity.startActivity(intent);
@@ -153,6 +166,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
+                                                            Log.e("DELETE IMAGE" , "IMG" + e.toString());
                                                             Toast.makeText(mContect, "Delete Picture Error", Toast.LENGTH_LONG).show();
                                                             builder.dismiss();
                                                         }
@@ -170,20 +184,11 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                     alertDialog.show();
                 }
             });
+            b_expand.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)b_delete.getLayoutParams();
+            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+            b_delete.setLayoutParams(lp);
 
-
-            b_expand.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (expand_content.getVisibility() == View.GONE) {
-                        expand_content.setVisibility(View.VISIBLE);
-                        b_expand.setBackground(itemView.getResources().getDrawable(R.drawable.ic_expand_less_24dp));
-                    } else {
-                        expand_content.setVisibility(View.GONE);
-                        b_expand.setBackground(itemView.getResources().getDrawable(R.drawable.ic_expand_more_24dp));
-                    }
-                }
-            });
 
             fileUploadPath.getDownloadUrl().
 
@@ -195,9 +200,19 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                                 public void onClick(View view) {
                                     String transitionName = ViewCompat.getTransitionName(view);
                                     Log.e("IMG", "onClick: " + transitionName);
+                                    assert transitionName != null;
                                     ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContect, view, transitionName);
                                     Intent intent = new Intent(itemView.getContext(), ProductItemInfoActivity.class);
-                                    intent.putExtra("IMG_URL", uri.toString());
+                                    intent.putExtra(IntentStringHelper.IMAGE_URL, uri.toString());
+                                    intent.putExtra(IntentStringHelper.PRODUCT_NAME, products.get(position).getName());
+                                    intent.putExtra(IntentStringHelper.PRODUCT_PRICE, products.get(position).getPrice());
+                                    intent.putExtra(IntentStringHelper.PRODUCT_TEL, products.get(position).getTel());
+                                    intent.putExtra(IntentStringHelper.PRODUCT_DESCRIPTION, products.get(position).getDescription());
+                                    intent.putExtra(IntentStringHelper.FACEBOOK_NAME, products.get(position).getFacebook_name());
+                                    intent.putExtra(IntentStringHelper.FACEBOOK_URL, products.get(position).getFacebook_url());
+                                    intent.putExtra(IntentStringHelper.LINE_URL, products.get(position).getLine_url());
+                                    intent.putExtra(IntentStringHelper.LAT, products.get(position).getLat());
+                                    intent.putExtra(IntentStringHelper.LON, products.get(position).getLon());
                                     mContect.startActivity(intent, activityOptionsCompat.toBundle());
                                 }
                             });

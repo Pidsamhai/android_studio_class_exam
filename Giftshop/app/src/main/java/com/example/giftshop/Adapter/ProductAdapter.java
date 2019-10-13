@@ -5,14 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +19,6 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.giftshop.Helper.IntentStringHelper;
@@ -31,8 +28,6 @@ import com.example.giftshop.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -84,19 +79,37 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
             profile_pic = itemView.findViewById(R.id.img_profile);
         }
 
+        @SuppressLint("DefaultLocale")
         void setItem(final int position) {
             title.setText(products.get(position).getName());
-            product_price.setText("ราคา ( " + products.get(position).getPrice() + " ) ฿");
+            Double _price = Double.parseDouble(products.get(position).getPrice());
+            product_price.setText(String.format("ราคา ( %,.2f ) ฿",_price).replace(".00",""));
             profile_name.setText(products.get(position).getU_name());
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
             StorageReference storageReference = firebaseStorage.getReferenceFromUrl("gs://pcru-giftshop.appspot.com");
             StorageReference fileUploadPath = storageReference.child("product/" + products.get(position).getPicture());
 
-            Glide.with(mContect)
-                    .load(products.get(position).getU_pic())
-                    .centerCrop()
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(profile_pic);
+            if(!products.get(position).getU_pic().isEmpty() && products.get(position).getU_pic() != null){
+                Glide.with(mContect)
+                        .load(products.get(position).getU_pic())
+                        .centerCrop()
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(profile_pic);
+            }
+
+            if(!products.get(position).getFacebook_url().isEmpty()){
+                facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String url = products.get(position).getFacebook_url();
+                        url = url.replace("http://","");
+                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + url));
+                        mContect.startActivity(intent);
+                    }
+                });
+            }else{
+                facebook.setVisibility(View.GONE);
+            }
 
             call.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,32 +120,30 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
                 }
             });
 
-            facebook.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String url = products.get(position).getFacebook_url();
-                    url = url.replace("http://","");
-                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + url));
-                    mContect.startActivity(intent);
-                }
-            });
+            if(!products.get(position).getLon().trim().isEmpty() || !products.get(position).getLat().trim().isEmpty()){
+                location.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String strUri = "http://maps.google.com/maps?q=loc:" + products.get(position).getLat() + "," + products.get(position).getLon();
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
+                        mContect.startActivity(intent);
+                    }
+                });
+            }else {
+                location.setVisibility(View.GONE);
+            }
 
-            location.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String strUri = "http://maps.google.com/maps?q=loc:" + products.get(position).getLat() + "," + products.get(position).getLon();
-                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
-                    mContect.startActivity(intent);
-                }
-            });
-
-            line.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(products.get(position).getLine_url()));
-                    mContect.startActivity(intent);
-                }
-            });
+            if(!products.get(position).getLine_url().isEmpty()){
+                line.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(products.get(position).getLine_url()));
+                        mContect.startActivity(intent);
+                    }
+                });
+            }else {
+                line.setVisibility(View.GONE);
+            }
 
 
             b_expand.setOnClickListener(new View.OnClickListener() {

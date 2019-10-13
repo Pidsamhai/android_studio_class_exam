@@ -35,6 +35,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Random;
 
 public class SettingProfileActivity extends AppCompatActivity {
 
@@ -81,16 +82,39 @@ public class SettingProfileActivity extends AppCompatActivity {
         profile_pic = findViewById(R.id.profile_pic);
 
         // init load setting
-        if(firebaseUser.getDisplayName() != null && firebaseUser.getPhotoUrl() != null){
-            String[] name = firebaseUser.getDisplayName().split(" ");
+        if(firebaseUser.getPhotoUrl() != null){
 
-            e_name.setText(name[0]);
-            e_last_name.setText(name[1]);
             Glide.with(SettingProfileActivity.this)
                     .load(firebaseUser.getPhotoUrl())
                     .centerCrop()
                     .apply(RequestOptions.circleCropTransform())
                     .into(profile_pic);
+        }else{
+            Integer[] avatar = {
+                    R.drawable.ic_avatar_1,
+                    R.drawable.ic_avatar_2,
+                    R.drawable.ic_avatar_3,
+                    R.drawable.ic_avatar_4,
+                    R.drawable.ic_avatar_5,
+                    R.drawable.ic_avatar_6,
+                    R.drawable.ic_avatar_7,
+                    R.drawable.ic_avatar_8,
+                    R.drawable.ic_avatar_9,
+            };
+            Integer index = new Random().nextInt(9);
+            Glide.with(SettingProfileActivity.this)
+                    .load(avatar[index])
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profile_pic);
+        }
+
+        if (firebaseUser.getDisplayName() != null && !firebaseUser.getDisplayName().isEmpty()){
+            Log.e("Dispaly name", "onCreate: " + firebaseUser.getDisplayName());
+            //String[] name = firebaseUser.getDisplayName().split(" ");
+
+            //e_name.setText(name[0]);
+           // e_last_name.setText(name[1]);
         }
 
         snackbar = Snackbar.make(context, "Save success!", Snackbar.LENGTH_LONG);
@@ -166,15 +190,26 @@ public class SettingProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     if(firebaseUser.getPhotoUrl() == null){
-
+                                        Integer[] avatar = {
+                                                R.drawable.ic_avatar_1,
+                                                R.drawable.ic_avatar_2,
+                                                R.drawable.ic_avatar_3,
+                                                R.drawable.ic_avatar_4,
+                                                R.drawable.ic_avatar_5,
+                                                R.drawable.ic_avatar_6,
+                                                R.drawable.ic_avatar_7,
+                                                R.drawable.ic_avatar_8,
+                                                R.drawable.ic_avatar_9,
+                                        };
+                                        Integer index = new Random().nextInt(9);
                                         Glide.with(getApplicationContext())
-                                                .load(R.drawable.ic_profile_24dp)
+                                                .load(avatar[index])
                                                 .centerCrop()
                                                 .apply(RequestOptions.circleCropTransform())
                                                 .into(profile_pic);
                                         fileUri = null;
                                     }else {
-                                        Glide.with(getApplicationContext())
+                                        Glide.with(SettingProfileActivity.this)
                                                 .load(firebaseUser.getPhotoUrl())
                                                 .centerCrop()
                                                 .apply(RequestOptions.circleCropTransform())
@@ -229,6 +264,7 @@ public class SettingProfileActivity extends AppCompatActivity {
                     Glide.with(SettingProfileActivity.this)
                             .load(fileUri)
                             .centerCrop()
+                            .apply(RequestOptions.circleCropTransform())
                             .into(profile_pic);
                 }
         }

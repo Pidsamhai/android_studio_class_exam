@@ -160,38 +160,90 @@ public class EditProductActivity extends AppCompatActivity {
                 new_product.put("line_url", e_line_url.getText().toString());
                 new_product.put("price", e_product_price.getText().toString());
                 if (fileUri != null) {
-                    builder.setTitle("Upload new image...");
+                    builder.setTitle("Delete old image...");
                     builder.show();
                     final String old_filename = products.getPicture().split("\\.")[0];
-                    tempFile = storageReference.child("product/" + products.getPicture());
-                    tempFile.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            builder.setTitle("Update database...");
-                            builder.show();
-                            new_product.put("picture", old_filename + "." + file_extention);
-                            db.collection("product").document(products.getProduct_id())
-                                    .update(new_product)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            builder.dismiss();
-                                            finish();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    builder.dismiss();
-                                    finish();
-                                }
-                            });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            builder.dismiss();
-                        }
-                    });
+                    final String old_file_extention = products.getPicture().split("\\.")[1];
+                    if (!old_file_extention.equals(file_extention)) {
+                        tempFile = storageReference.child("product/" + products.getPicture());
+                        tempFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                builder.dismiss();
+                                builder.setTitle("Upload new image...");
+                                builder.show();
+                                tempFile.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        builder.setTitle("Update database...");
+                                        builder.show();
+                                        new_product.put("picture", old_filename + "." + file_extention);
+                                        db.collection("product").document(products.getProduct_id())
+                                                .update(new_product)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        builder.dismiss();
+                                                        finish();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                builder.dismiss();
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        builder.dismiss();
+                                        finish();
+                                    }
+                                });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                builder.dismiss();
+                                finish();
+                            }
+                        });
+                    }else{
+                        builder.dismiss();
+                        builder.setTitle("Upload new image...");
+                        builder.show();
+                        tempFile.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                builder.setTitle("Update database...");
+                                builder.show();
+                                new_product.put("picture", old_filename + "." + file_extention);
+                                db.collection("product").document(products.getProduct_id())
+                                        .update(new_product)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                builder.dismiss();
+                                                finish();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        builder.dismiss();
+                                        finish();
+                                    }
+                                });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                builder.dismiss();
+                                finish();
+                            }
+                        });
+                    }
+
                 } else {
                     builder.setTitle("Update database...");
                     builder.show();
