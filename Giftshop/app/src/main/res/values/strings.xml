@@ -29,4 +29,34 @@
     <string name="line_url">Line Url</string>
     <string name="description">Description</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="language">Language</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="select_language">Select Language</string>
+    <string name="no_internet_connection">No internet connection !</string>
+    <string name="connected">Connected !</string>
+    <string name="close">Close</string>
+    <string name="_logout">Logout…</string>
+    <string name="_remove_image">Remove image?</string>
+    <string name="choose_file">Choose file</string>
+    <string name="_upload_new_image">Upload new image…</string>
+    <string name="_update_database">Update database…</string>
+    <string name="_delete_old_image">Delete old image…</string>
+    <string name="_get_information">Get information…</string>
+    <string name="_loading">Loading…</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="restart_application">Restart Application?</string>
+    <string name="later">Later</string>
+    <string name="no_item">No item !!</string>
+    <string name="_remove_image_profile">Remove image profile</string>
+    <string name="profile_setting">Profile Setting</string>
+    <string name="_delete_product">Delete Product ?</string>
+    <string name="_get_image_info">Get image info…</string>
+    <string name="_delete_database">Delete data base…</string>
+    <string name="_delete_image_error">Delete image error</string>
+    <string name="_delete_image_complete">Delete image complete</string>
+    <string name="_delete_image_temp">Delete image temp…</string>
+    <string name="cradit">แอพนี้สร้างขึ้นเพื่อประกอบการศึกษา เท่านั้น</string>
+    <string name="coppyright">Copyright©  MENGX 2019</string>
+
 </resources>

@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(RegisterActivity.this)
-                .setTitle("Loading...")
+                .setTitle(R.string._loading)
                 .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                 .setCancelable(false)
                 .create();

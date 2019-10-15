@@ -54,7 +54,7 @@ public class EditProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_product);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Edit Product");
+        toolbar.setTitle(R.string.edit_product);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_24dp));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -85,7 +85,7 @@ public class EditProductActivity extends AppCompatActivity {
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(EditProductActivity.this)
-                .setTitle("Loading...")
+                .setTitle(R.string._loading)
                 .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                 .setCancelable(false)
                 .create();
@@ -95,12 +95,12 @@ public class EditProductActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent chooseFile = new Intent(Intent.ACTION_PICK);
                 chooseFile.setType("image/*");
-                chooseFile = Intent.createChooser(chooseFile, "Choose a file");
+                chooseFile = Intent.createChooser(chooseFile, "" + R.string.choose_file);
                 startActivityForResult(chooseFile, IntentStringHelper.PICKFILE_RESULT_CODE);
             }
         });
 
-        builder.setTitle("Get information...");
+        builder.setTitle(R.string._get_information);
         builder.show();
         db.collection("product").document(product_id)
                 .get()
@@ -160,7 +160,7 @@ public class EditProductActivity extends AppCompatActivity {
                 new_product.put("line_url", e_line_url.getText().toString());
                 new_product.put("price", e_product_price.getText().toString());
                 if (fileUri != null) {
-                    builder.setTitle("Delete old image...");
+                    builder.setTitle(R.string._delete_old_image);
                     builder.show();
                     final String old_filename = products.getPicture().split("\\.")[0];
                     final String old_file_extention = products.getPicture().split("\\.")[1];
@@ -170,12 +170,12 @@ public class EditProductActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 builder.dismiss();
-                                builder.setTitle("Upload new image...");
+                                builder.setTitle(R.string._upload_new_image);
                                 builder.show();
                                 tempFile.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        builder.setTitle("Update database...");
+                                        builder.setTitle(R.string._update_database);
                                         builder.show();
                                         new_product.put("picture", old_filename + "." + file_extention);
                                         db.collection("product").document(products.getProduct_id())
@@ -211,12 +211,12 @@ public class EditProductActivity extends AppCompatActivity {
                         });
                     }else{
                         builder.dismiss();
-                        builder.setTitle("Upload new image...");
+                        builder.setTitle(R.string._upload_new_image);
                         builder.show();
                         tempFile.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                builder.setTitle("Update database...");
+                                builder.setTitle(R.string._update_database);
                                 builder.show();
                                 new_product.put("picture", old_filename + "." + file_extention);
                                 db.collection("product").document(products.getProduct_id())
@@ -245,7 +245,7 @@ public class EditProductActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    builder.setTitle("Update database...");
+                    builder.setTitle(R.string._update_database);
                     builder.show();
                     db.collection("product").document(products.getProduct_id())
                             .update(new_product)
@@ -270,8 +270,8 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 new android.app.AlertDialog.Builder(EditProductActivity.this)
-                        .setTitle("Remove image?")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setTitle(R.string._remove_image)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Glide.with(EditProductActivity.this)
@@ -281,7 +281,7 @@ public class EditProductActivity extends AppCompatActivity {
                                 delete_img_btn.setVisibility(View.GONE);
                                 fileUri = null;
                             }
-                        }).setNegativeButton("Cancel", null)
+                        }).setNegativeButton(R.string.cancel, null)
                         .show();
             }
         });

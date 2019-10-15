@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.giftshop.Helper.IntentStringHelper;
@@ -98,7 +99,11 @@ public class ProductItemInfoActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String strUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lon;
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
-                    startActivity(intent);
+                    try{
+                        startActivity(intent);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -112,16 +117,20 @@ public class ProductItemInfoActivity extends AppCompatActivity {
             }
         });
 
-        if (facbook_name.trim().isEmpty() || facebook_url.trim().isEmpty()){
+        if (facbook_name.trim().isEmpty() ){
             l_facebook.setVisibility(View.GONE);
-        }else{
+        }else if (facebook_url.trim().isEmpty()){
             l_facebook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String _url = facebook_url;
                     _url = _url.replace("http://","");
                     Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + _url));
-                    startActivity(intent);
+                    try{
+                        startActivity(intent);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -133,7 +142,11 @@ public class ProductItemInfoActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(line_url));
-                    startActivity(intent);
+                    try{
+                        startActivity(intent);
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }

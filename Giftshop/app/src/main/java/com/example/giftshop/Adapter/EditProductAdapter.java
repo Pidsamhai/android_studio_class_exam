@@ -111,7 +111,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
             LayoutInflater layoutInflater = mactivity.getLayoutInflater();
 
             builder = new AlertDialog.Builder(mactivity)
-                    .setTitle("Loading...")
+                    .setTitle(R.string._loading)
                     .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                     .setCancelable(false)
                     .create();
@@ -139,13 +139,13 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                 @Override
                 public void onClick(View view) {
                     alertDialog = new AlertDialog.Builder(mContect)
-                            .setTitle("Delete Product ?")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setTitle(R.string._delete_product)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    builder.setTitle("Get Picture info...");
+                                    builder.setTitle(R.string._get_image_info);
                                     builder.show();
-                                    builder.setTitle("Delete Database...");
+                                    builder.setTitle(R.string._delete_database);
                                     builder.show();
                                     db.collection("product").document(products.get(position).getProduct_id())
                                             .delete()
@@ -154,20 +154,20 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(mContect, "Delete : " + products.get(position).getProduct_id() + " Complete", Toast.LENGTH_LONG).show();
                                                     builder.dismiss();
-                                                    builder.setTitle("Delete Picture temp...");
+                                                    builder.setTitle(R.string._delete_image_temp);
                                                     builder.show();
                                                     fileUploadPath.child("product/" + products.get(position).getPicture());
                                                     fileUploadPath.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            Toast.makeText(mContect, "Delete Picture Complete", Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(mContect, R.string._delete_image_complete, Toast.LENGTH_LONG).show();
                                                             builder.dismiss();
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
                                                             Log.e("DELETE IMAGE" , "IMG" + e.toString());
-                                                            Toast.makeText(mContect, "Delete Picture Error", Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(mContect, R.string._delete_image_error, Toast.LENGTH_LONG).show();
                                                             builder.dismiss();
                                                         }
                                                     });
@@ -180,7 +180,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                                         }
                                     });
                                 }
-                            }).setNegativeButton("Cancel", null);
+                            }).setNegativeButton(R.string.cancel, null);
                     alertDialog.show();
                 }
             });

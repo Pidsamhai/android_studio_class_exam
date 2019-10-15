@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
             android:icon="@drawable/ic_home_24dp"
@@ -19,8 +20,13 @@
             android:id="@+id/menu_logout"
             android:title="@string/logout"/>
         <item
+            android:icon="@drawable/ic_worlwide"
+            android:id="@+id/menu_language"
+            android:title="@string/language"
+            tools:targetApi="o" />
+        <item
             android:icon="@drawable/ic_info_24dp"
-            android:id="@+id/menu_bottom_navigator"
+            android:id="@+id/menu_about"
             android:title="@string/about"/>
     </group>
 </menu>

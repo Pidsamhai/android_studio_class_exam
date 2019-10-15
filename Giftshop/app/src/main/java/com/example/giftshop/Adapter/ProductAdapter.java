@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
@@ -83,7 +84,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
         void setItem(final int position) {
             title.setText(products.get(position).getName());
             Double _price = Double.parseDouble(products.get(position).getPrice());
-            product_price.setText(String.format("ราคา ( %,.2f ) ฿",_price).replace(".00",""));
+            product_price.setText(String.format("( %,.2f ) ฿",_price).replace(".00",""));
             profile_name.setText(products.get(position).getU_name());
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
             StorageReference storageReference = firebaseStorage.getReferenceFromUrl("gs://pcru-giftshop.appspot.com");
@@ -104,7 +105,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
                         String url = products.get(position).getFacebook_url();
                         url = url.replace("http://","");
                         Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + url));
-                        mContect.startActivity(intent);
+                        try{
+                            mContect.startActivity(intent );
+                        }catch (Exception e){
+                            Toast.makeText(mContect,e.getMessage(),Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }else{
@@ -126,7 +131,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
                     public void onClick(View view) {
                         String strUri = "http://maps.google.com/maps?q=loc:" + products.get(position).getLat() + "," + products.get(position).getLon();
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
-                        mContect.startActivity(intent);
+                        try{
+                            mContect.startActivity(intent);
+                        }catch (Exception e){
+                            Toast.makeText(mContect,e.getMessage(),Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }else {
@@ -134,11 +143,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
             }
 
             if(!products.get(position).getLine_url().isEmpty()){
-                line.setOnClickListener(new View.OnClickListener() {
+                        line.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(products.get(position).getLine_url()));
-                        mContect.startActivity(intent);
+                        try{
+                            mContect.startActivity(intent);
+                        }catch (Exception e){
+                            Toast.makeText(mContect,e.getMessage(),Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }else {

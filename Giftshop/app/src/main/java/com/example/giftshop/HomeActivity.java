@@ -1,7 +1,13 @@
 package com.example.giftshop;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -46,6 +52,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.rd.PageIndicatorView;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
@@ -56,7 +63,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     FirebaseUser firebaseUser;
     NavigationView navigationView;
-    private AlertDialog builder;
+    private AlertDialog builder,_builder;
     private static final String TAG = "HomeActivity";
     private TextView profile_name, profile_email, recycle_no_item;
     private ImageView profile_pic;
@@ -74,13 +81,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private PageIndicatorView pageIndicatorView;
     private Timer timer;
     private View context;
+    private Locale locale;
+    private Configuration configuration;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
 
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("LANGUAGE", 0);
+        final SharedPreferences.Editor editor = pref.edit();
+
+
+        setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -96,12 +109,61 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(HomeActivity.this)
-                .setTitle("Logout...")
+                .setTitle(R.string._logout)
                 .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                 .setCancelable(false)
                 .create();
 
-        final Snackbar snackbar = Snackbar.make(context, "No internet connection !", Snackbar.LENGTH_INDEFINITE);
+        LayoutInflater _layoutInflater = getLayoutInflater();
+        View select_layout = _layoutInflater.inflate(R.layout.select_language,null);
+        _builder = new AlertDialog.Builder(HomeActivity.this)
+                .setTitle(R.string.select_language)
+                .setView(select_layout)
+                .setNegativeButton(R.string.cancel,null)
+                .create();
+
+        final ImageView btn_en = (ImageView)select_layout.findViewById(R.id.lang_en);
+        final ImageView btn_th = (ImageView)select_layout.findViewById(R.id.lang_th);
+
+        btn_en.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _builder.dismiss();
+                editor.putString("lang","en");
+                editor.commit();
+                new AlertDialog.Builder(HomeActivity.this)
+                        .setTitle(R.string.restart_application)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                restartApp();
+                            }
+                        })
+                        .setNegativeButton(R.string.later,null)
+                        .show();
+
+            }
+        });
+        btn_th.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _builder.dismiss();
+                editor.putString("lang","th");
+                editor.commit();
+                new AlertDialog.Builder(HomeActivity.this)
+                        .setTitle(R.string.restart_application)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                restartApp();
+                            }
+                        })
+                        .setNegativeButton(R.string.later,null)
+                        .show();
+            }
+        });
+
+        final Snackbar snackbar = Snackbar.make(context, R.string.no_internet_connection, Snackbar.LENGTH_INDEFINITE);
         final View snackbarView = snackbar.getView();
 
 
@@ -126,7 +188,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 new Runnable() {
                                     @Override
                                     public void run() {
-                                        snackbar.setAction("close", new View.OnClickListener() {
+                                        snackbar.setAction(R.string.close, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
                                                 snackbar.dismiss();
@@ -147,8 +209,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             new Runnable() {
                                 @Override
                                 public void run() {
-                                    snackbar.setText("Connected !");
-                                    snackbar.setAction("close", new View.OnClickListener() {
+                                    snackbar.setText(R.string.connected);
+                                    snackbar.setAction(R.string.close, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             snackbar.dismiss();
@@ -327,18 +389,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
                 break;
             case R.id.menu_add_product:
-                Intent intent = new Intent(HomeActivity.this, AddProductActivity.class);
-                startActivityForResult(intent, ADDPRODUCT_REQUEST_CODE);
+
+                startActivityForResult(new Intent(HomeActivity.this, AddProductActivity.class), ADDPRODUCT_REQUEST_CODE);
                 break;
             case R.id.menu_my_product:
-                Intent my_product = new Intent(HomeActivity.this, MyProductActivity.class);
-                startActivityForResult(my_product, ADDPRODUCT_REQUEST_CODE);
+                startActivityForResult(new Intent(HomeActivity.this, MyProductActivity.class), ADDPRODUCT_REQUEST_CODE);
                 break;
-            case R.id.menu_bottom_navigator:
-                Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
+            case R.id.menu_about:
+                startActivity(new Intent(HomeActivity.this,AboutActivity.class));
                 break;
             case R.id.menu_logout:
                 fireBaseLogout();
+                break;
+            case R.id.menu_language:
+                _builder.show();
                 break;
         }
         drawerLayout.closeDrawer(navigationView);
@@ -387,6 +451,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         });
                     }
                 });
+    }
+
+    private void restartApp() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override

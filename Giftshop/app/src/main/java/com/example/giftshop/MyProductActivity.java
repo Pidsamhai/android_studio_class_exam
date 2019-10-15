@@ -44,7 +44,7 @@ public class MyProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_product);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("My Product");
+        toolbar.setTitle(R.string.my_product);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;

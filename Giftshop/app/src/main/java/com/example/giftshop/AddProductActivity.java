@@ -101,7 +101,7 @@ public class AddProductActivity extends AppCompatActivity {
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(AddProductActivity.this)
-                .setTitle("Add product...")
+                .setTitle(R.string.add_product)
                 .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                 .setCancelable(false)
                 .create();
@@ -111,7 +111,7 @@ public class AddProductActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent chooseFile = new Intent(Intent.ACTION_PICK);
                 chooseFile.setType("image/*");
-                chooseFile = Intent.createChooser(chooseFile, "Choose a file");
+                chooseFile = Intent.createChooser(chooseFile, "" + R.string.choose_file);
                 startActivityForResult(chooseFile, IntentStringHelper.PICKFILE_RESULT_CODE);
             }
         });
@@ -121,7 +121,6 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(e_product_name.getText().toString().trim().isEmpty() || e_product_name.getText() == null){
-                    Toast.makeText(AddProductActivity.this,"cbdvcyvdhc",Toast.LENGTH_LONG).show();
                     e_product_name.requestFocus();
                     return;
                 }
@@ -225,15 +224,15 @@ public class AddProductActivity extends AppCompatActivity {
                         @Override
                         public boolean onLongClick(View view) {
                             new AlertDialog.Builder(AddProductActivity.this)
-                                    .setTitle("Remove image?")
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    .setTitle(R.string._remove_image)
+                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             imageView.setVisibility(View.GONE);
                                             pic_img_btn.setImageResource(R.drawable.ic_insert_photo_24dp);
                                             pic_img_btn.setEnabled(true);
                                         }
-                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 

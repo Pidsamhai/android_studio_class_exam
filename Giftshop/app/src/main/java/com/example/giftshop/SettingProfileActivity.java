@@ -45,7 +45,6 @@ public class SettingProfileActivity extends AppCompatActivity {
     StorageReference storageReference;
     public static final int PICKFILE_RESULT_CODE = 1;
     private Uri fileUri;
-    private EditText e_tel;
     private ImageView profile_pic;
     private UploadTask uploadTask;
     private AlertDialog builder;
@@ -60,7 +59,7 @@ public class SettingProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting_profile);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Profile Setting");
+        toolbar.setTitle(R.string.profile_setting);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_24dp));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -78,7 +77,6 @@ public class SettingProfileActivity extends AppCompatActivity {
 
         final EditText e_name = findViewById(R.id.e_name);
         final EditText e_last_name = findViewById(R.id.e_last_name);
-        e_tel = findViewById(R.id.e_tel);
         profile_pic = findViewById(R.id.profile_pic);
 
         // init load setting
@@ -111,10 +109,10 @@ public class SettingProfileActivity extends AppCompatActivity {
 
         if (firebaseUser.getDisplayName() != null && !firebaseUser.getDisplayName().isEmpty()){
             Log.e("Dispaly name", "onCreate: " + firebaseUser.getDisplayName());
-            //String[] name = firebaseUser.getDisplayName().split(" ");
+            String[] name = firebaseUser.getDisplayName().split(" ");
 
-            //e_name.setText(name[0]);
-           // e_last_name.setText(name[1]);
+            e_name.setText(name[0]);
+            e_last_name.setText(name[1]);
         }
 
         snackbar = Snackbar.make(context, "Save success!", Snackbar.LENGTH_LONG);
@@ -173,7 +171,7 @@ public class SettingProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent chooseFile = new Intent(Intent.ACTION_PICK);
                 chooseFile.setType("image/*");
-                chooseFile = Intent.createChooser(chooseFile, "Choose a file");
+                chooseFile = Intent.createChooser(chooseFile, "" + R.string.choose_file);
                 startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
             }
         });
@@ -185,7 +183,7 @@ public class SettingProfileActivity extends AppCompatActivity {
 
                 if(fileUri != null){
                     new AlertDialog.Builder(SettingProfileActivity.this)
-                            .setTitle("Remove picture profile")
+                            .setTitle(R.string._remove_image_profile)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -218,7 +216,7 @@ public class SettingProfileActivity extends AppCompatActivity {
                                     }
 
                                 }
-                            }).setNegativeButton("Cancel",null)
+                            }).setNegativeButton(R.string.cancel,null)
                             .show();
                 }else{
 

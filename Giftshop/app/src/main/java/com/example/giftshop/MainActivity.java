@@ -3,6 +3,8 @@ package com.example.giftshop;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +46,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Locale;
+
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
@@ -57,17 +62,32 @@ public class MainActivity extends AppCompatActivity {
     LoginButton loginButton;
     private static final String TAG = "MainActivity";
 
-    public MainActivity() {
-    }
+    public MainActivity() { }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("LANGUAGE", 0);
+        final SharedPreferences.Editor editor = pref.edit();
+
+        String lang = pref.getString("lang",null);
+        if(lang == null){
+            editor.putString("lang", "en");
+            editor.apply();
+        }else{
+            Locale locale = new Locale(lang);
+            Locale.setDefault(locale);
+            Configuration configuration = new Configuration();
+            configuration.locale = locale;
+            getBaseContext().getResources().updateConfiguration(configuration
+                    ,getBaseContext().getResources().getDisplayMetrics());
+        }
+
         setContentView(R.layout.activity_main);
         final View context = findViewById(R.id.context_mainactivity);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Login");
+        toolbar.setTitle(R.string.login);
         setSupportActionBar(toolbar);
 
 
@@ -90,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         LayoutInflater layoutInflater = getLayoutInflater();
         builder = new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Loading...")
+                .setTitle(R.string._loading)
                 .setView(layoutInflater.inflate(R.layout.progress_dialog, null))
                 .setCancelable(false)
                 .create();

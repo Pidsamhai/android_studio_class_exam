@@ -95,7 +95,7 @@
         android:visibility="gone"
         android:id="@+id/recycle_no_item"
         android:textSize="20dp"
-        android:text="No item !!"
+        android:text="@string/no_item"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
