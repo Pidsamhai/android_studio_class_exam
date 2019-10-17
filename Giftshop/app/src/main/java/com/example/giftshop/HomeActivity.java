@@ -39,6 +39,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.giftshop.Adapter.LastEventAdapter_loop;
 import com.example.giftshop.Adapter.ProductAdapter;
 import com.example.giftshop.Model.Product;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -339,7 +340,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         builder.show();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         googleSignInClient.signOut();
-        final Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+        LoginManager.getInstance().logOut();
+        final Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         new Handler().postDelayed(new Runnable() {
@@ -348,7 +350,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 builder.dismiss();
                 startActivity(intent);
             }
-        }, 1000);
+        }, 5000);
     }
 
     @Override

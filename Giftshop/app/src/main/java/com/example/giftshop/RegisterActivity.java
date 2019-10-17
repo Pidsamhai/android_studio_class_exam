@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Register");
+        toolbar.setTitle(R.string.register);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_24dp));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -72,14 +73,16 @@ public class RegisterActivity extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getResult()).toString(),Toast.LENGTH_LONG).show();
                                 builder.dismiss();
+                                Intent logint_intent = new Intent(RegisterActivity.this,HomeActivity.class);
+                                logint_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                logint_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(logint_intent);
                                 finish();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegisterActivity.this, e.getMessage(),Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
