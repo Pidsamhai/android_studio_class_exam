@@ -18,12 +18,40 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/img"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:fitsSystemWindows="true"
-            android:transitionName="img" />
+            android:layout_height="200dp">
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:fitsSystemWindows="true"
+                android:transitionName="img" />
+            <RelativeLayout
+                android:background="@drawable/blur_bg"
+                android:layout_margin="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_avatar_4"
+                    android:id="@+id/img_profile"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
+                <TextView
+                    android:textSize="15sp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/t_profile_name"
+                    android:textColor="@color/primaryTextColor"
+                    android:layout_toEndOf="@id/img_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
 
         <androidx.cardview.widget.CardView
             android:layout_margin="10dp"

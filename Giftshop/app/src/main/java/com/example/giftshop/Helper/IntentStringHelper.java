@@ -13,4 +13,7 @@ public class IntentStringHelper {
     public static String LON = "LON";
     public static String PRUDUCT_ID = "PRUDUCT_ID";
     public static Integer PICKFILE_RESULT_CODE = 1;
+    public static String PROFILE_NAME = "PROFILE_NAME";
+    public static String PROFILE_PIC_URL = "PROFILE_PIC_URL";
+
 }

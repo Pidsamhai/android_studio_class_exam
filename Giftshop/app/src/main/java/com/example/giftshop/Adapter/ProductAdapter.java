@@ -183,6 +183,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
                             ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContect, view, transitionName);
                             Intent intent = new Intent(itemView.getContext(), ProductItemInfoActivity.class);
                             intent.putExtra(IntentStringHelper.IMAGE_URL, uri.toString());
+                            intent.putExtra(IntentStringHelper.PROFILE_NAME, products.get(position).getU_name());
+                            intent.putExtra(IntentStringHelper.PROFILE_PIC_URL, products.get(position).getU_pic());
                             intent.putExtra(IntentStringHelper.PRODUCT_NAME, products.get(position).getName());
                             intent.putExtra(IntentStringHelper.PRODUCT_PRICE, products.get(position).getPrice());
                             intent.putExtra(IntentStringHelper.PRODUCT_TEL, products.get(position).getTel());

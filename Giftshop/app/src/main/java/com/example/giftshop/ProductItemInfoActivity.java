@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giftshop.Helper.IntentStringHelper;
 import com.example.giftshop.Model.Product;
 
@@ -27,8 +28,8 @@ import java.util.Objects;
 
 public class ProductItemInfoActivity extends AppCompatActivity {
 
-    private ImageView img;
-    private TextView t_name,t_price,t_description,t_tel,t_facebook_name,t_line_id,t_location;
+    private ImageView img,i_profile_pic;
+    private TextView t_name,t_price,t_description,t_tel,t_facebook_name,t_line_id,t_location,t_profilename;
     private LinearLayout l_facebook,l_line,l_location,l_call;
 
 
@@ -63,8 +64,12 @@ public class ProductItemInfoActivity extends AppCompatActivity {
         l_line = findViewById(R.id.l_line);
         l_location = findViewById(R.id.l_location);
         l_call = findViewById(R.id.l_call);
+        i_profile_pic = findViewById(R.id.img_profile);
+        t_profilename = findViewById(R.id.t_profile_name);
 
         //Get data form intent
+        final String profile_pic_url = getIntent().getStringExtra(IntentStringHelper.PROFILE_PIC_URL);
+        final String profile_name = getIntent().getStringExtra(IntentStringHelper.PROFILE_NAME);
         final String url = getIntent().getStringExtra(IntentStringHelper.IMAGE_URL);
         final String tel = getIntent().getStringExtra(IntentStringHelper.PRODUCT_TEL);
         final String name = getIntent().getStringExtra(IntentStringHelper.PRODUCT_NAME);
@@ -90,6 +95,15 @@ public class ProductItemInfoActivity extends AppCompatActivity {
         t_tel.setText(tel);
         t_location.setText(lat + "," + lon);
         t_facebook_name.setText(facbook_name);
+        t_profilename.setText(profile_name);
+
+        if(!profile_name.trim().isEmpty()){
+            Glide.with(getApplicationContext())
+                    .load(profile_pic_url)
+                    .centerCrop()
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(i_profile_pic);
+        }
 
         if(lat.trim().isEmpty() || lon.trim().isEmpty()){
             l_location.setVisibility(View.GONE);
@@ -119,7 +133,7 @@ public class ProductItemInfoActivity extends AppCompatActivity {
 
         if (facbook_name.trim().isEmpty() ){
             l_facebook.setVisibility(View.GONE);
-        }else if (facebook_url.trim().isEmpty()){
+        }else if (!facebook_url.trim().isEmpty()){
             l_facebook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -145,7 +159,7 @@ public class ProductItemInfoActivity extends AppCompatActivity {
                     try{
                         startActivity(intent);
                     }catch (Exception e){
-                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Error can't open link",Toast.LENGTH_LONG).show();
                     }
                 }
             });
