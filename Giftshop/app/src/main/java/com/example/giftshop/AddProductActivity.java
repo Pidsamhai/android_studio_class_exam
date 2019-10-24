@@ -4,14 +4,15 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,39 +24,40 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.pm.PackageInfoCompat;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.giftshop.Helper.IntentStringHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+
 public class AddProductActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private Button b_save;
-    private EditText e_product_name, e_product_detail, e_product_tel,e_facebook_name,e_facebook_url, e_line_url,e_lat,e_lon,e_price;
+    private EditText e_product_name, e_product_detail, e_product_tel, e_facebook_name, e_facebook_url, e_line_url, e_lat, e_lon, e_price;
     private FirebaseAuth firebaseAuth;
     //private FloatingActionButton f_add_product;
     private FirebaseUser firebaseUser;
     private String TAG = "AddProductActivity";
     private AlertDialog builder;
     private ImageView pic_img_btn;
-    private LinearLayout img_layout;
+    private ImageView img_layout;
     private Uri fileUri;
     private RelativeLayout pick_img_layout;
     private UploadTask uploadTask;
@@ -63,6 +65,7 @@ public class AddProductActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ArrayList<Uri> fileUri_list;
     private String file_extention;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +95,10 @@ public class AddProductActivity extends AppCompatActivity {
         e_lon = findViewById(R.id.e_lon);
         e_price = findViewById(R.id.e_product_price);
         pic_img_btn = findViewById(R.id.pick_img_btn);
-        img_layout = findViewById(R.id.img_layout);
+        img_layout = findViewById(R.id.img_layout1);
         fileUri_list = new ArrayList<>();
         pick_img_layout = findViewById(R.id.pick_img_layout);
-        //pic_img = findViewById(R.id.pick_img);
+
 
         e_product_tel.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
@@ -120,23 +123,24 @@ public class AddProductActivity extends AppCompatActivity {
         b_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(e_product_name.getText().toString().trim().isEmpty() || e_product_name.getText() == null){
+                if (fileUri == null) {
+                    Toast.makeText(AddProductActivity.this,"Please Add Image",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (e_product_name.getText().toString().trim().isEmpty() || e_product_name.getText() == null) {
                     e_product_name.requestFocus();
                     return;
                 }
-                if(e_price.getText().toString().trim().isEmpty() && e_price.getText() == null || e_price.getText().toString().trim().length() == 0){
+                if (e_price.getText().toString().trim().isEmpty() && e_price.getText() == null || e_price.getText().toString().trim().length() == 0) {
                     e_price.requestFocus();
                     return;
                 }
-                if(e_product_detail.getText().toString().trim().isEmpty() || e_product_detail.getText() == null){
+                if (e_product_detail.getText().toString().trim().isEmpty() || e_product_detail.getText() == null) {
                     e_product_detail.requestFocus();
                     return;
                 }
-                if(e_product_tel.getText().toString().trim().isEmpty() || e_product_tel.getText() == null){
+                if (e_product_tel.getText().toString().trim().isEmpty() || e_product_tel.getText() == null) {
                     e_product_tel.requestFocus();
-                    return;
-                }
-                if(fileUri == null){
                     return;
                 }
 
@@ -150,10 +154,38 @@ public class AddProductActivity extends AppCompatActivity {
 
     protected void upLoadImg() {
         builder.show();
+        Bitmap bitmap = null;
+        double size = 0.00;
         final String unique_id = UUID.randomUUID().toString();
         final String product_id = UUID.randomUUID().toString();
-        final StorageReference fileUploadPath = storageReference.child("product/" + unique_id + "." + file_extention);
-        uploadTask = fileUploadPath.putFile(fileUri);
+        final StorageReference fileUploadPath = storageReference.child("product/" + unique_id + ".png");
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
+            ContentResolver c = getContentResolver();
+            InputStream is = c.openInputStream(fileUri);
+            size = is.available() / 1024;
+            Log.e(TAG, "onActivityResult: File Size " + String.format(size >= 1024 ? "%.2f MB" : "%.2f KB", size >= 1024 ? size / 1024 : size));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "onActivityResult: Bitmap Error ");
+        }
+        if (size > 1024) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            if (size >= 1024 && size <= 1536) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+            } else {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+
+            }
+            byte[] file_data = baos.toByteArray();
+            uploadTask = fileUploadPath.putBytes(file_data);
+            Toast.makeText(AddProductActivity.this, "More than 1MB", Toast.LENGTH_LONG).show();
+        } else {
+            uploadTask = fileUploadPath.putFile(fileUri);
+            Toast.makeText(AddProductActivity.this, "Less than 1MB", Toast.LENGTH_LONG).show();
+
+        }
+
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
@@ -165,13 +197,13 @@ public class AddProductActivity extends AppCompatActivity {
                 productObj.put("name", e_product_name.getText().toString());
                 productObj.put("description", e_product_detail.getText().toString());
                 productObj.put("tel", e_product_tel.getText().toString());
-                productObj.put("picture", unique_id + "." + file_extention);
-                productObj.put("lat",e_lat.getText().toString().trim());
-                productObj.put("lon",e_lon.getText().toString().trim());
-                productObj.put("facebook_name",e_facebook_name.getText().toString().trim());
-                productObj.put("facebook_url",e_facebook_url.getText().toString().trim());
+                productObj.put("picture", unique_id + ".png");
+                productObj.put("lat", e_lat.getText().toString().trim());
+                productObj.put("lon", e_lon.getText().toString().trim());
+                productObj.put("facebook_name", e_facebook_name.getText().toString().trim());
+                productObj.put("facebook_url", e_facebook_url.getText().toString().trim());
                 productObj.put("line_url", e_line_url.getText().toString().trim());
-                productObj.put("price",e_price.getText().toString());
+                productObj.put("price", e_price.getText().toString());
                 db.collection("product").document(product_id)
                         .set(productObj)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -198,60 +230,46 @@ public class AddProductActivity extends AppCompatActivity {
         });
     }
 
-    private String getfileExtension(Uri uri)
-    {
-        String extension;
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        extension= mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-        return extension;
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IntentStringHelper.PICKFILE_RESULT_CODE){
-                if (resultCode == -1) {
-                    fileUri = data.getData();
-                    file_extention = getfileExtension(fileUri);
-                    Log.e(TAG, "onActivityResult Extension : " + file_extention);
-                    final ImageView imageView = new ImageView(AddProductActivity.this);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    imageView.setLayoutParams(lp);
-                    imageView.setBackground(getResources().getDrawable(R.drawable.img_border));
-                    imageView.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            new AlertDialog.Builder(AddProductActivity.this)
-                                    .setTitle(R.string._remove_image)
-                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            imageView.setVisibility(View.GONE);
-                                            pic_img_btn.setImageResource(R.drawable.ic_insert_photo_24dp);
-                                            pic_img_btn.setEnabled(true);
-                                        }
-                                    }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
+        if (requestCode == IntentStringHelper.PICKFILE_RESULT_CODE) {
+            if (resultCode == -1) {
+                fileUri = data.getData();
+                Log.e(TAG, "onActivityResult Extension : " + file_extention);
+                img_layout.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        new AlertDialog.Builder(AddProductActivity.this)
+                                .setTitle(R.string._remove_image)
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        img_layout.setVisibility(View.GONE);
+                                        fileUri = null;
+                                        pic_img_btn.setImageResource(R.drawable.ic_insert_photo_24dp);
+                                        pic_img_btn.setEnabled(true);
+                                    }
+                                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                                }
-                            }).show();
-                            return false;
-                        }
-                    });
-                    Glide.with(AddProductActivity.this)
-                            .load(fileUri)
-                            .centerCrop()
-                            .into(imageView);
-                    if (fileUri != null){
-                        pic_img_btn.setEnabled(false);
-                        pic_img_btn.setImageResource(0);
-                        pick_img_layout.setBackgroundColor(Color.parseColor("#eeeeee"));
+                            }
+                        }).show();
+                        return false;
                     }
-                    img_layout.addView(imageView);
+                });
+                Glide.with(AddProductActivity.this)
+                        .load(fileUri)
+                        .centerCrop()
+                        .into(img_layout);
+                if (fileUri != null) {
+                    pic_img_btn.setEnabled(false);
+                    pic_img_btn.setImageResource(0);
+                    pick_img_layout.setBackgroundColor(Color.parseColor("#eeeeee"));
+                    img_layout.setVisibility(View.VISIBLE);
                 }
+            }
         }
     }
 

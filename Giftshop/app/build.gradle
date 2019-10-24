@@ -50,10 +50,6 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.0.0'
 
-    //resize image
-    implementation 'id.zelory:compressor:2.1.0'
-
-
     // loader layout
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
     //implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'

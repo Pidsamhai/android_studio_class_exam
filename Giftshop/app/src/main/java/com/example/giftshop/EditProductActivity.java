@@ -3,15 +3,17 @@ package com.example.giftshop;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +32,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -47,6 +52,7 @@ public class EditProductActivity extends AppCompatActivity {
     private Product products;
     private static String TAG = "EditProductActivity";
     private Uri fileUri, oldImage;
+    private UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +154,7 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final Map<String, Object> new_product = new HashMap<>();
+
                 new_product.put("u_id", products.getU_id());
                 new_product.put("product_id", product_id);
                 new_product.put("name", e_product_name.getText().toString());
@@ -162,87 +169,79 @@ public class EditProductActivity extends AppCompatActivity {
                 if (fileUri != null) {
                     builder.setTitle(R.string._delete_old_image);
                     builder.show();
-                    final String old_filename = products.getPicture().split("\\.")[0];
-                    final String old_file_extention = products.getPicture().split("\\.")[1];
-                    if (!old_file_extention.equals(file_extention)) {
-                        tempFile = storageReference.child("product/" + products.getPicture());
-                        tempFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                builder.dismiss();
-                                builder.setTitle(R.string._upload_new_image);
-                                builder.show();
-                                tempFile.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        builder.setTitle(R.string._update_database);
-                                        builder.show();
-                                        new_product.put("picture", old_filename + "." + file_extention);
-                                        db.collection("product").document(products.getProduct_id())
-                                                .update(new_product)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        builder.dismiss();
-                                                        finish();
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                builder.dismiss();
-                                                finish();
-                                            }
-                                        });
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        builder.dismiss();
-                                        finish();
-                                    }
-                                });
+
+                    tempFile = storageReference.child("product/" + products.getPicture());
+                    tempFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            builder.dismiss();
+                            builder.setTitle(R.string._upload_new_image);
+                            builder.show();
+                            Bitmap bitmap = null;
+                            double size = 0.00;
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(EditProductActivity.this.getContentResolver(), fileUri);
+                                ContentResolver c = getContentResolver();
+                                InputStream is = c.openInputStream(fileUri);
+                                size = is.available() / 1024;
+                                Log.e(TAG, "onActivityResult: File Size " + String.format(size >= 1024 ? "%.2f MB" : "%.2f KB", size >= 1024 ? size / 1024 : size));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, "onActivityResult: Bitmap Error ");
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                builder.dismiss();
-                                finish();
+                            if (size > 1024) {
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                if (size >= 1024 && size <= 1536) {
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+                                } else {
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+
+                                }
+                                byte[] file_data = baos.toByteArray();
+                                uploadTask = tempFile.putBytes(file_data);
+                                Toast.makeText(EditProductActivity.this, "More than 1MB", Toast.LENGTH_LONG).show();
+                            } else {
+                                uploadTask = tempFile.putFile(fileUri);
+                                Toast.makeText(EditProductActivity.this, "Less than 1MB", Toast.LENGTH_LONG).show();
+
                             }
-                        });
-                    }else{
-                        builder.dismiss();
-                        builder.setTitle(R.string._upload_new_image);
-                        builder.show();
-                        tempFile.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                builder.setTitle(R.string._update_database);
-                                builder.show();
-                                new_product.put("picture", old_filename + "." + file_extention);
-                                db.collection("product").document(products.getProduct_id())
-                                        .update(new_product)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                builder.dismiss();
-                                                finish();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        builder.dismiss();
-                                        finish();
-                                    }
-                                });
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                builder.dismiss();
-                                finish();
-                            }
-                        });
-                    }
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    builder.setTitle(R.string._update_database);
+                                    builder.show();
+
+                                    db.collection("product").document(products.getProduct_id())
+                                            .update(new_product)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    builder.dismiss();
+                                                    finish();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            builder.dismiss();
+                                            finish();
+                                        }
+                                    });
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    builder.dismiss();
+                                    finish();
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            builder.dismiss();
+                            finish();
+                        }
+                    });
 
                 } else {
                     builder.setTitle(R.string._update_database);
@@ -287,21 +286,12 @@ public class EditProductActivity extends AppCompatActivity {
         });
     }
 
-    private String getfileExtension(Uri uri) {
-        String extension;
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        extension = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-        return extension;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IntentStringHelper.PICKFILE_RESULT_CODE) {
             if (resultCode == -1) {
                 fileUri = data.getData();
-                file_extention = getfileExtension(fileUri);
                 Log.e(TAG, "onActivityResult Extension : " + file_extention);
                 delete_img_btn.setVisibility(View.VISIBLE);
                 Glide.with(EditProductActivity.this)
