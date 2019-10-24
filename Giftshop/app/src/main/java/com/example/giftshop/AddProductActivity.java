@@ -217,7 +217,7 @@ public class AddProductActivity extends AppCompatActivity {
                     file_extention = getfileExtension(fileUri);
                     Log.e(TAG, "onActivityResult Extension : " + file_extention);
                     final ImageView imageView = new ImageView(AddProductActivity.this);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                     imageView.setLayoutParams(lp);
                     imageView.setBackground(getResources().getDrawable(R.drawable.img_border));
                     imageView.setOnLongClickListener(new View.OnLongClickListener() {
