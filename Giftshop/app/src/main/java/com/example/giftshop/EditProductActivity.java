@@ -27,6 +27,7 @@ import com.example.giftshop.Model.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -41,7 +42,7 @@ import java.util.Objects;
 
 public class EditProductActivity extends AppCompatActivity {
 
-    private EditText e_product_name, e_product_description, e_product_tel, e_facebook_name, e_facebook_url, e_line_url, e_lat, e_lon, e_product_price;
+    private EditText e_product_name, e_product_description, e_product_tel, e_facebook_name, e_facebook_url, e_line_url, e_line_id, e_lat, e_lon, e_product_price;
     private ImageView product_img, pick_img_btn, delete_img_btn;
     private Button b_save;
     private FirebaseFirestore db;
@@ -51,7 +52,8 @@ public class EditProductActivity extends AppCompatActivity {
     private String product_id, file_extention;
     private Product products;
     private static String TAG = "EditProductActivity";
-    private Uri fileUri, oldImage;
+    private Uri fileUri;
+    private String oldImage;
     private UploadTask uploadTask;
 
     @Override
@@ -75,6 +77,7 @@ public class EditProductActivity extends AppCompatActivity {
         e_facebook_name = findViewById(R.id.e_facebook_name);
         e_facebook_url = findViewById(R.id.e_facebook_url);
         e_line_url = findViewById(R.id.e_line_url);
+        e_line_id = findViewById(R.id.e_line_id);
         e_lat = findViewById(R.id.e_lat);
         e_lon = findViewById(R.id.e_lon);
         e_product_price = findViewById(R.id.e_product_price);
@@ -115,32 +118,22 @@ public class EditProductActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         products = documentSnapshot.toObject(Product.class);
                         Log.e(TAG, "onSuccess: " + products.getName());
+                        oldImage = products.getPicture_url();
                         tempFile = storageReference.child("product/" + products.getPicture());
-                        tempFile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                oldImage = uri;
-                                Glide.with(EditProductActivity.this)
-                                        .load(uri)
-                                        .centerCrop()
-                                        .into(product_img);
-                                e_product_name.setText(products.getName());
-                                e_product_description.setText(products.getDescription());
-                                e_product_tel.setText(products.getTel());
-                                e_product_price.setText(products.getPrice());
-                                e_facebook_name.setText(products.getFacebook_name());
-                                e_facebook_url.setText(products.getFacebook_url());
-                                e_line_url.setText(products.getLine_url());
-                                e_lat.setText(products.getLat());
-                                e_lon.setText(products.getLon());
-                                builder.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                builder.dismiss();
-                            }
-                        });
+                        Glide.with(EditProductActivity.this)
+                                .load(oldImage)
+                                .centerCrop()
+                                .into(product_img);
+                        e_product_name.setText(products.getName());
+                        e_product_description.setText(products.getDescription());
+                        e_product_tel.setText(products.getTel());
+                        e_product_price.setText(products.getPrice());
+                        e_facebook_name.setText(products.getFacebook_name());
+                        e_facebook_url.setText(products.getFacebook_url());
+                        e_line_url.setText(products.getLine_url());
+                        e_lat.setText(products.getLat());
+                        e_lon.setText(products.getLon());
+                        builder.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -153,8 +146,8 @@ public class EditProductActivity extends AppCompatActivity {
         b_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Map<String, Object> new_product = new HashMap<>();
 
+                final Map<String, Object> new_product = new HashMap<>();
                 new_product.put("u_id", products.getU_id());
                 new_product.put("product_id", product_id);
                 new_product.put("name", e_product_name.getText().toString());
@@ -165,7 +158,9 @@ public class EditProductActivity extends AppCompatActivity {
                 new_product.put("facebook_name", e_facebook_name.getText().toString());
                 new_product.put("facebook_url", e_facebook_url.getText().toString());
                 new_product.put("line_url", e_line_url.getText().toString());
+                new_product.put("line_id", e_line_id.getText().toString());
                 new_product.put("price", e_product_price.getText().toString());
+                new_product.put("timestamps", FieldValue.serverTimestamp());
                 if (fileUri != null) {
                     builder.setTitle(R.string._delete_old_image);
                     builder.show();
@@ -179,6 +174,7 @@ public class EditProductActivity extends AppCompatActivity {
                             builder.show();
                             Bitmap bitmap = null;
                             double size = 0.00;
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             try {
                                 bitmap = MediaStore.Images.Media.getBitmap(EditProductActivity.this.getContentResolver(), fileUri);
                                 ContentResolver c = getContentResolver();
@@ -190,18 +186,19 @@ public class EditProductActivity extends AppCompatActivity {
                                 Log.e(TAG, "onActivityResult: Bitmap Error ");
                             }
                             if (size > 1024) {
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                 if (size >= 1024 && size <= 1536) {
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
                                 } else {
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 30, baos);
 
                                 }
                                 byte[] file_data = baos.toByteArray();
                                 uploadTask = tempFile.putBytes(file_data);
                                 Toast.makeText(EditProductActivity.this, "More than 1MB", Toast.LENGTH_LONG).show();
                             } else {
-                                uploadTask = tempFile.putFile(fileUri);
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                byte[] file_data = baos.toByteArray();
+                                uploadTask = tempFile.putBytes(file_data);
                                 Toast.makeText(EditProductActivity.this, "Less than 1MB", Toast.LENGTH_LONG).show();
 
                             }
@@ -210,14 +207,26 @@ public class EditProductActivity extends AppCompatActivity {
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     builder.setTitle(R.string._update_database);
                                     builder.show();
-
-                                    db.collection("product").document(products.getProduct_id())
-                                            .update(new_product)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    tempFile.getDownloadUrl()
+                                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    builder.dismiss();
-                                                    finish();
+                                                public void onSuccess(Uri uri) {
+                                                    new_product.put("picture_url", uri.toString());
+                                                    db.collection("product").document(products.getProduct_id())
+                                                            .update(new_product)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    builder.dismiss();
+                                                                    finish();
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            builder.dismiss();
+                                                            finish();
+                                                        }
+                                                    });
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -226,6 +235,7 @@ public class EditProductActivity extends AppCompatActivity {
                                             finish();
                                         }
                                     });
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

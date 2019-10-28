@@ -56,4 +56,8 @@
     <string name="_delete_image_temp">ลบรูปออกจากฐานข้อมูล</string>
     <string name="_delete_product">ต้องการลบสินค้า?</string>
     <string name="_get_image_info">กำลังดึงข้อมูลรูปภาพ...</string>
+    <string name="confirm">ยืนยัน</string>
+    <string name="_logout_right">ต้องการออกจากระบบใช่หรือไม่?</string>
+    <string name="_please_addimage">กรุณาเพิ่มรูปภาพก่อน</string>
+    <string name="_please_add_your_name_before">กรูณาตั้งค่าชื่อของคุณก่อนเพิ่มสินค้าที่เมนูตั้งค่า</string>
 </resources>

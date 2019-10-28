@@ -86,9 +86,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
             Double _price = Double.parseDouble(products.get(position).getPrice());
             product_price.setText(String.format("( %,.2f ) ฿",_price).replace(".00",""));
             profile_name.setText(products.get(position).getU_name());
-            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-            StorageReference storageReference = firebaseStorage.getReferenceFromUrl("gs://pcru-giftshop.appspot.com");
-            StorageReference fileUploadPath = storageReference.child("product/" + products.get(position).getPicture());
 
             if(!products.get(position).getU_pic().isEmpty() && products.get(position).getU_pic() != null){
                 Glide.with(mContect)
@@ -172,40 +169,34 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Holder> 
                 }
             });
 
-            fileUploadPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            img.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onSuccess(final Uri uri) {
-                    img.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            String transitionName = ViewCompat.getTransitionName(view);
-                            //Log.e("IMG", "onClick: " + transitionName);
-                            ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContect, view, transitionName);
-                            Intent intent = new Intent(itemView.getContext(), ProductItemInfoActivity.class);
-                            intent.putExtra(IntentStringHelper.IMAGE_URL, uri.toString());
-                            intent.putExtra(IntentStringHelper.PROFILE_NAME, products.get(position).getU_name());
-                            intent.putExtra(IntentStringHelper.PROFILE_PIC_URL, products.get(position).getU_pic());
-                            intent.putExtra(IntentStringHelper.PRODUCT_NAME, products.get(position).getName());
-                            intent.putExtra(IntentStringHelper.PRODUCT_PRICE, products.get(position).getPrice());
-                            intent.putExtra(IntentStringHelper.PRODUCT_TEL, products.get(position).getTel());
-                            intent.putExtra(IntentStringHelper.PRODUCT_DESCRIPTION, products.get(position).getDescription());
-                            intent.putExtra(IntentStringHelper.FACEBOOK_NAME, products.get(position).getFacebook_name());
-                            intent.putExtra(IntentStringHelper.FACEBOOK_URL, products.get(position).getFacebook_url());
-                            intent.putExtra(IntentStringHelper.LINE_URL, products.get(position).getLine_url());
-                            intent.putExtra(IntentStringHelper.LAT, products.get(position).getLat());
-                            intent.putExtra(IntentStringHelper.LON, products.get(position).getLon());
-                            mContect.startActivity(intent, activityOptionsCompat.toBundle());
-                        }
-                    });
-                    Glide.with(itemView.getContext())
-                            .load(uri)
-                            .centerCrop()
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .into(img);
-                    //Log.e("Adaptter", "onSuccess: " + uri);
+                public void onClick(View view) {
+                    String transitionName = ViewCompat.getTransitionName(view);
+                    //Log.e("IMG", "onClick: " + transitionName);
+                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContect, view, transitionName);
+                    Intent intent = new Intent(itemView.getContext(), ProductItemInfoActivity.class);
+                    intent.putExtra(IntentStringHelper.PRODUCT_IMG_URL, products.get(position).getPicture_url());
+                    intent.putExtra(IntentStringHelper.PROFILE_NAME, products.get(position).getU_name());
+                    intent.putExtra(IntentStringHelper.PROFILE_PIC_URL, products.get(position).getU_pic());
+                    intent.putExtra(IntentStringHelper.PRODUCT_NAME, products.get(position).getName());
+                    intent.putExtra(IntentStringHelper.LINE_ID, products.get(position).getLine_id());
+                    intent.putExtra(IntentStringHelper.PRODUCT_PRICE, products.get(position).getPrice());
+                    intent.putExtra(IntentStringHelper.PRODUCT_TEL, products.get(position).getTel());
+                    intent.putExtra(IntentStringHelper.PRODUCT_DESCRIPTION, products.get(position).getDescription());
+                    intent.putExtra(IntentStringHelper.FACEBOOK_NAME, products.get(position).getFacebook_name());
+                    intent.putExtra(IntentStringHelper.FACEBOOK_URL, products.get(position).getFacebook_url());
+                    intent.putExtra(IntentStringHelper.LINE_URL, products.get(position).getLine_url());
+                    intent.putExtra(IntentStringHelper.LAT, products.get(position).getLat());
+                    intent.putExtra(IntentStringHelper.LON, products.get(position).getLon());
+                    mContect.startActivity(intent, activityOptionsCompat.toBundle());
                 }
             });
-
+            Glide.with(itemView.getContext())
+                    .load(products.get(position).getPicture_url())
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(img);
         }
     }
 

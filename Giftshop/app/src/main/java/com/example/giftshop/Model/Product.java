@@ -13,11 +13,13 @@ public class Product extends ArrayList<String> {
     private String description;
     private String tel;
     private String picture;
+    private String picture_url;
     private String product_id;
     private String price;
     private String facebook_name;
     private String facebook_url;
     private String line_url;
+    private String line_id;
     private String lat;
     private String lon;
 
@@ -32,10 +34,12 @@ public class Product extends ArrayList<String> {
             String description,
             String tel,
             String picture,
+            String picture_url,
             String price,
             String facebook_name,
             String facebook_url,
             String line_url,
+            String line_id,
             String lat,
             String lon
     ){}
@@ -95,5 +99,13 @@ public class Product extends ArrayList<String> {
 
     public String getPrice() {
         return price;
+    }
+
+    public String getPicture_url() {
+        return picture_url;
+    }
+
+    public String getLine_id() {
+        return line_id;
     }
 }

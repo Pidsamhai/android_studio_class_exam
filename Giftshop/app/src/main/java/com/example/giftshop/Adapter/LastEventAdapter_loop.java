@@ -31,17 +31,9 @@ public class LastEventAdapter_loop extends LoopingPagerAdapter<Product> {
     @Override
     protected void bindView(View convertView, int listPosition, int viewType) {
         final ImageView imageView = convertView.findViewById(R.id.items);
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = firebaseStorage.getReferenceFromUrl("gs://pcru-giftshop.appspot.com");
-        StorageReference fileUploadPath = storageReference.child("product/" + itemList.get(listPosition).getPicture());
-        fileUploadPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
                 Glide.with(context)
-                        .load(uri)
+                        .load(itemList.get(listPosition).getPicture_url())
                         .centerCrop()
                         .into(imageView);
-            }
-        });
     }
 }

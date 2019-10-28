@@ -1,7 +1,6 @@
 package com.example.giftshop;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -49,6 +49,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.rd.PageIndicatorView;
 
@@ -401,7 +402,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(HomeActivity.this,AboutActivity.class));
                 break;
             case R.id.menu_logout:
-                fireBaseLogout();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.logout)
+                        .setMessage(R.string._logout_right)
+                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                fireBaseLogout();
+                            }
+                        }).setNegativeButton(R.string.cancel,null)
+                        .show();
                 break;
             case R.id.menu_language:
                 _builder.show();
@@ -428,6 +438,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void updateNewItem(){
         db.collection("product")
+                .orderBy("timestamps",Query.Direction.DESCENDING)
                 .limit(3)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

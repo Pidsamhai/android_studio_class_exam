@@ -14,24 +14,45 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:titleTextColor="@color/primaryTextColor" />
 
-    <LinearLayout
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar">
+        <LinearLayout
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+                <ImageView
+                    android:id="@+id/git_btn"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_github_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </LinearLayout>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cradit" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30sp"
-            android:text="@string/cradit" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30sp"
+                android:text="@string/coppyright" />
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30sp"
-            android:text="@string/coppyright" />
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

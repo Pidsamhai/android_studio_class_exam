@@ -1,10 +1,16 @@
 package com.example.giftshop;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.os.Bundle;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -19,6 +25,23 @@ public class AboutActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_24dp);
+
+
+        final ImageView git_btn = findViewById(R.id.git_btn);
+        git_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(AboutActivity.this)
+                        .setTitle("Open Github repo ?")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Pidsamhai/android_studio_class_exam/tree/master/Giftshop")));
+                            }
+                        }).setNegativeButton("Cancel", null)
+                        .show();
+            }
+        });
     }
 
     @Override

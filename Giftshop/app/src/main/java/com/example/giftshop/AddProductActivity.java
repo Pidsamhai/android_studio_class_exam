@@ -1,6 +1,6 @@
 package com.example.giftshop;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,12 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -39,7 +40,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -50,7 +54,7 @@ public class AddProductActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private Button b_save;
-    private EditText e_product_name, e_product_detail, e_product_tel, e_facebook_name, e_facebook_url, e_line_url, e_lat, e_lon, e_price;
+    private EditText e_product_name, e_product_detail, e_product_tel, e_facebook_name, e_facebook_url, e_line_url,e_line_id, e_lat, e_lon, e_price;
     private FirebaseAuth firebaseAuth;
     //private FloatingActionButton f_add_product;
     private FirebaseUser firebaseUser;
@@ -91,6 +95,7 @@ public class AddProductActivity extends AppCompatActivity {
         e_facebook_name = findViewById(R.id.e_facebook_name);
         e_facebook_url = findViewById(R.id.e_facebook_url);
         e_line_url = findViewById(R.id.e_line_url);
+        e_line_id = findViewById(R.id.e_line_id);
         e_lat = findViewById(R.id.e_lat);
         e_lon = findViewById(R.id.e_lon);
         e_price = findViewById(R.id.e_product_price);
@@ -123,8 +128,12 @@ public class AddProductActivity extends AppCompatActivity {
         b_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(firebaseUser.getDisplayName()==null){
+                    Toast.makeText(AddProductActivity.this,R.string._please_add_your_name_before,Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (fileUri == null) {
-                    Toast.makeText(AddProductActivity.this,"Please Add Image",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddProductActivity.this, R.string._please_addimage, Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (e_product_name.getText().toString().trim().isEmpty() || e_product_name.getText() == null) {
@@ -159,6 +168,7 @@ public class AddProductActivity extends AppCompatActivity {
         final String unique_id = UUID.randomUUID().toString();
         final String product_id = UUID.randomUUID().toString();
         final StorageReference fileUploadPath = storageReference.child("product/" + unique_id + ".png");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
             ContentResolver c = getContentResolver();
@@ -170,18 +180,19 @@ public class AddProductActivity extends AppCompatActivity {
             Log.e(TAG, "onActivityResult: Bitmap Error ");
         }
         if (size > 1024) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
             if (size >= 1024 && size <= 1536) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
             } else {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 30, baos);
 
             }
             byte[] file_data = baos.toByteArray();
             uploadTask = fileUploadPath.putBytes(file_data);
             Toast.makeText(AddProductActivity.this, "More than 1MB", Toast.LENGTH_LONG).show();
         } else {
-            uploadTask = fileUploadPath.putFile(fileUri);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] file_data = baos.toByteArray();
+            uploadTask = fileUploadPath.putBytes(file_data);
             Toast.makeText(AddProductActivity.this, "Less than 1MB", Toast.LENGTH_LONG).show();
 
         }
@@ -189,38 +200,59 @@ public class AddProductActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                Map<String, Object> productObj = new HashMap<>();
-                productObj.put("u_id", firebaseUser.getUid());
-                productObj.put("u_name", firebaseUser.getDisplayName());
-                productObj.put("u_pic", firebaseUser.getPhotoUrl() == null ? "" : firebaseUser.getPhotoUrl().toString());
-                productObj.put("product_id", product_id);
-                productObj.put("name", e_product_name.getText().toString());
-                productObj.put("description", e_product_detail.getText().toString());
-                productObj.put("tel", e_product_tel.getText().toString());
-                productObj.put("picture", unique_id + ".png");
-                productObj.put("lat", e_lat.getText().toString().trim());
-                productObj.put("lon", e_lon.getText().toString().trim());
-                productObj.put("facebook_name", e_facebook_name.getText().toString().trim());
-                productObj.put("facebook_url", e_facebook_url.getText().toString().trim());
-                productObj.put("line_url", e_line_url.getText().toString().trim());
-                productObj.put("price", e_price.getText().toString());
-                db.collection("product").document(product_id)
-                        .set(productObj)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                fileUploadPath.getDownloadUrl()
+                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                builder.dismiss();
-                                finish();
-                                Log.d(TAG, "DocumentSnapshot written with ID: " + product_id);
+                            public void onSuccess(Uri uri) {
+                                Date c = Calendar.getInstance().getTime();
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                                String forematdate = df.format(c);
+                                Log.e(TAG, "onSuccess: Date Time :" + forematdate);
+                                Map<String, Object> productObj = new HashMap<>();
+                                productObj.put("u_id", firebaseUser.getUid());
+                                productObj.put("u_name", firebaseUser.getDisplayName());
+                                productObj.put("u_pic", firebaseUser.getPhotoUrl() == null ? "" : firebaseUser.getPhotoUrl().toString());
+                                productObj.put("product_id", product_id);
+                                productObj.put("name", e_product_name.getText().toString());
+                                productObj.put("description", e_product_detail.getText().toString());
+                                productObj.put("tel", e_product_tel.getText().toString());
+                                productObj.put("picture", unique_id + ".png");
+                                productObj.put("picture_url", uri.toString());
+                                productObj.put("lat", e_lat.getText().toString().trim());
+                                productObj.put("lon", e_lon.getText().toString().trim());
+                                productObj.put("facebook_name", e_facebook_name.getText().toString().trim());
+                                productObj.put("facebook_url", e_facebook_url.getText().toString().trim());
+                                productObj.put("line_url", e_line_url.getText().toString().trim());
+                                productObj.put("line_id", e_line_id.getText().toString().trim());
+                                productObj.put("price", e_price.getText().toString());
+                                productObj.put("timestamps", FieldValue.serverTimestamp());
+                                db.collection("product").document(product_id)
+                                        .set(productObj)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                builder.dismiss();
+                                                finish();
+                                                Log.d(TAG, "DocumentSnapshot written with ID: " + product_id);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        builder.dismiss();
+                                        finish();
+                                        Log.e(TAG, "onFailure: " + e);
+                                    }
+                                });
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        builder.dismiss();
-                        finish();
-                        Log.e(TAG, "onFailure: " + e);
-                    }
-                });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                builder.dismiss();
+                            }
+                        });
+
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

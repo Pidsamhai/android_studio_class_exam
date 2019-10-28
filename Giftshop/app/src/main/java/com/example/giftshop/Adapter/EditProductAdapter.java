@@ -29,6 +29,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.giftshop.EditProductActivity;
 import com.example.giftshop.Helper.IntentStringHelper;
 import com.example.giftshop.Model.Product;
+import com.example.giftshop.MyProductActivity;
 import com.example.giftshop.ProductItemInfoActivity;
 import com.example.giftshop.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,7 +46,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
     private List<Product> products;
     private Activity mactivity;
 
-    public EditProductAdapter(Activity activity, Context context, List<Product> dataset) {
+    public EditProductAdapter(Activity activity, Context context ,List<Product> dataset) {
         mContect = context;
         products = dataset;
         mactivity = activity;
@@ -162,6 +163,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                                                         public void onSuccess(Void aVoid) {
                                                             Toast.makeText(mContect, R.string._delete_image_complete, Toast.LENGTH_LONG).show();
                                                             builder.dismiss();
+                                                            ((MyProductActivity)mContect).upDateData();
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
@@ -169,6 +171,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                                                             Log.e("DELETE IMAGE" , "IMG" + e.toString());
                                                             Toast.makeText(mContect, R.string._delete_image_error, Toast.LENGTH_LONG).show();
                                                             builder.dismiss();
+                                                            ((MyProductActivity)mactivity).upDateData();
                                                         }
                                                     });
                                                 }

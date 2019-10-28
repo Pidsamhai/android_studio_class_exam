@@ -141,22 +141,31 @@
                         android:maxLength="14" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <LinearLayout
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                <RelativeLayout
                     android:layout_marginTop="10dp"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:layout_centerVertical="true"
+                        android:id="@+id/t_geo"
                         android:text="@string/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <ImageView
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/t_geo"
                         android:layout_marginStart="10dp"
                         android:src="@drawable/ic_location_24dp"
                         android:layout_width="20dp"
                         android:layout_height="20dp"/>
-                </LinearLayout>
+                    <ImageView
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_my_location"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="300dp"
@@ -264,6 +273,21 @@
                         android:layout_marginStart="10dp"
                         android:src="@drawable/ic_line" />
                 </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/l_line_id"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/line_id">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/e_line_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textUri"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

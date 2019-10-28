@@ -74,13 +74,14 @@ public class MyProductActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
     }
 
-    private void upDateData() {
+    public void upDateData() {
         swipeRefreshLayout.setRefreshing(true);
         db.collection("product")
                 .whereEqualTo("u_id", firebaseUser.getUid())

@@ -58,5 +58,10 @@
     <string name="_delete_image_temp">Delete image temp…</string>
     <string name="cradit">แอพนี้สร้างขึ้นเพื่อประกอบการศึกษา เท่านั้น</string>
     <string name="coppyright">Copyright©  MENGX 2019</string>
+    <string name="line_id">Line ID</string>
+    <string name="confirm">Confirm</string>
+    <string name="_logout_right">Do you want to log out?</string>
+    <string name="_please_add_your_name_before">Please add your name in setting before add product.</string>
+    <string name="_please_addimage">Please Add Image.</string>
 
 </resources>
