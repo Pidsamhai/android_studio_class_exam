@@ -130,9 +130,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                 public void onClick(View view) {
                     final Intent intent = new Intent(mactivity, EditProductActivity.class);
                     intent.putExtra(IntentStringHelper.PRUDUCT_ID, products.get(position).getProduct_id());
-                    mactivity.startActivity(intent);
-
-
+                    mactivity.startActivityForResult(intent,2);
                 }
             });
 
@@ -206,8 +204,11 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
                                     assert transitionName != null;
                                     ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContect, view, transitionName);
                                     Intent intent = new Intent(itemView.getContext(), ProductItemInfoActivity.class);
-                                    intent.putExtra(IntentStringHelper.IMAGE_URL, uri.toString());
+                                    intent.putExtra(IntentStringHelper.PRODUCT_IMG_URL, products.get(position).getPicture_url());
+                                    intent.putExtra(IntentStringHelper.PROFILE_NAME, products.get(position).getU_name());
+                                    intent.putExtra(IntentStringHelper.PROFILE_PIC_URL, products.get(position).getU_pic());
                                     intent.putExtra(IntentStringHelper.PRODUCT_NAME, products.get(position).getName());
+                                    intent.putExtra(IntentStringHelper.LINE_ID, products.get(position).getLine_id());
                                     intent.putExtra(IntentStringHelper.PRODUCT_PRICE, products.get(position).getPrice());
                                     intent.putExtra(IntentStringHelper.PRODUCT_TEL, products.get(position).getTel());
                                     intent.putExtra(IntentStringHelper.PRODUCT_DESCRIPTION, products.get(position).getDescription());

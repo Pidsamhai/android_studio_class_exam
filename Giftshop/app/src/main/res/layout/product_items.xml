@@ -36,31 +36,33 @@
                 android:background="@color/grey"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"/>
-            <RelativeLayout
+            <LinearLayout
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="75dp">
                 <TextView
+                    android:layout_marginBottom="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:id="@+id/title"
-                    android:textSize="30sp"
                     android:text="name"
                     android:textColor="@color/secondaryTextColor"
-                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_width="match_parent"
                     android:autoSizeTextType="uniform"/>
 
                 <TextView
+                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_alignParentEnd="true"
                     android:id="@+id/product_price"
-                    android:textSize="30sp"
+                    android:textSize="20sp"
                     android:text="ราคา (300 ฿)"
                     android:textColor="@color/secondaryTextColor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            </RelativeLayout>
+            </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
@@ -84,7 +86,9 @@
                 <Button
                     android:visibility="visible"
                     android:id="@+id/b_expand"
-                    android:layout_margin="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/ic_expand_more_24dp"
                     android:layout_alignParentEnd="true"
@@ -116,36 +120,36 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_margin="10dp"
-                        android:id="@+id/img_call"
-                        android:src="@drawable/ic_call_100dp"
-                        android:layout_width="fill_parent"
-                        android:layout_height="24dp"/>
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_margin="10dp"
-                        android:id="@+id/img_location"
-                        android:src="@drawable/ic_location_100dp"
-                        android:layout_width="fill_parent"
-                        android:layout_height="24dp"/>
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:id="@+id/img_call"
+                    android:src="@drawable/ic_call_100dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="24dp"/>
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:id="@+id/img_location"
+                    android:src="@drawable/ic_location_100dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="24dp"/>
 
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_margin="10dp"
-                        android:id="@+id/img_facebook"
-                        android:src="@drawable/ic_facebook"
-                        android:layout_width="fill_parent"
-                        android:layout_height="24dp"/>
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:id="@+id/img_facebook"
+                    android:src="@drawable/ic_facebook"
+                    android:layout_width="fill_parent"
+                    android:layout_height="24dp"/>
 
-                    <ImageView
-                        android:layout_weight="1"
-                        android:layout_margin="10dp"
-                        android:id="@+id/img_line"
-                        android:src="@drawable/ic_line"
-                        android:layout_width="fill_parent"
-                        android:layout_height="24dp"/>
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:id="@+id/img_line"
+                    android:src="@drawable/ic_line"
+                    android:layout_width="fill_parent"
+                    android:layout_height="24dp"/>
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

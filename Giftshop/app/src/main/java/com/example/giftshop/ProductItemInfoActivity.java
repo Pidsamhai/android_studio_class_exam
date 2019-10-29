@@ -30,7 +30,7 @@ public class ProductItemInfoActivity extends AppCompatActivity {
     private LinearLayout l_facebook, l_line, l_location, l_call;
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +89,7 @@ public class ProductItemInfoActivity extends AppCompatActivity {
         Double _price = Double.parseDouble(price);
 
         t_name.setText(name);
-        t_price.setText(String.format("%,.2f", _price).replace(".00", ""));
+        t_price.setText(String.format("%,.2f บาท", _price).replace(".00", ""));
         t_description.setText(description);
         t_tel.setText(tel);
         t_location.setText(lat + "," + lon);
