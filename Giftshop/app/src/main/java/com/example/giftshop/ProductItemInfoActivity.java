@@ -45,7 +45,7 @@ public class ProductItemInfoActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_keyboard_arrow_left_black_24dp));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_btn_transparent));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 

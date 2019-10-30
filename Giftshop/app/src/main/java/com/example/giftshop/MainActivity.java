@@ -28,8 +28,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.e(TAG, "onCreate: " + BuildConfig.VERSION_NAME);
+
         new Splashy(this)
-                .setTitle(getString(R.string.app_name) + "V " + BuildConfig.VERSION_NAME)
+                .setTitle(getString(R.string.app_name) + " v " + BuildConfig.VERSION_NAME)
                 .setLogo(R.drawable.ic_logo)
                 .setTitleColor(R.color.primaryLightColor)
                 .showProgress(true)
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 .setSubTitle(getString(R.string.coppyright))
                 .setFullScreen(true)
                 .setProgressColor(R.color.primaryDarkColor)
+                .setTitleSize(22)
                 .show();
         Splashy.Companion.onComplete(new Splashy.OnComplete() {
             @Override

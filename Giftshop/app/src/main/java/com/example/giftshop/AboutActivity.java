@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -42,6 +43,9 @@ public class AboutActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+        final TextView t_version_name = findViewById(R.id.t_version_name);
+        t_version_name.setText(String.format("v %s %s",BuildConfig.VERSION_NAME,BuildConfig.BUILD_TYPE));
     }
 
     @Override

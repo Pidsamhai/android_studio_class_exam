@@ -48,8 +48,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30sp"
+                android:layout_marginTop="20sp"
                 android:text="@string/coppyright" />
+            <TextView
+                android:textSize="15sp"
+                android:id="@+id/t_version_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
 
