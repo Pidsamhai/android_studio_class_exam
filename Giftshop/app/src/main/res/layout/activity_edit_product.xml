@@ -45,6 +45,7 @@
                         android:layout_height="match_parent"/>
 
                     <ImageView
+                        android:background="@color/blur"
                         android:layout_margin="5dp"
                         android:layout_alignParentEnd="true"
                         android:id="@+id/pick_img_btn"
@@ -52,6 +53,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"/>
                     <ImageView
+                        android:background="@color/blur"
                         android:visibility="gone"
                         android:layout_margin="5dp"
                         android:layout_below="@+id/pick_img_btn"

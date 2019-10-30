@@ -54,7 +54,7 @@ public class AddProductActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private Button b_save;
-    private EditText e_product_name, e_product_detail, e_product_tel, e_facebook_name, e_facebook_url, e_line_url,e_line_id, e_lat, e_lon, e_price;
+    private EditText e_product_name, e_product_detail, e_product_tel, e_facebook_name, e_facebook_url, e_line_url, e_line_id, e_lat, e_lon, e_price;
     private FirebaseAuth firebaseAuth;
     //private FloatingActionButton f_add_product;
     private FirebaseUser firebaseUser;
@@ -128,8 +128,8 @@ public class AddProductActivity extends AppCompatActivity {
         b_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(firebaseUser.getDisplayName()==null){
-                    Toast.makeText(AddProductActivity.this,R.string._please_add_your_name_before,Toast.LENGTH_LONG).show();
+                if (firebaseUser.getDisplayName() == null) {
+                    Toast.makeText(AddProductActivity.this, R.string._please_add_your_name_before, Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (fileUri == null) {
@@ -160,106 +160,89 @@ public class AddProductActivity extends AppCompatActivity {
 
     }
 
-
     protected void upLoadImg() {
+        Log.e(TAG, "test_upload_task: " + "Init Upload Image");
         builder.show();
-        Bitmap bitmap = null;
-        double size = 0.00;
         final String unique_id = UUID.randomUUID().toString();
         final String product_id = UUID.randomUUID().toString();
-        final StorageReference fileUploadPath = storageReference.child("product/" + unique_id + ".png");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
-            ContentResolver c = getContentResolver();
-            InputStream is = c.openInputStream(fileUri);
-            size = is.available() / 1024;
-            Log.e(TAG, "onActivityResult: File Size " + String.format(size >= 1024 ? "%.2f MB" : "%.2f KB", size >= 1024 ? size / 1024 : size));
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, "onActivityResult: Bitmap Error ");
-        }
-        if (size > 1024) {
-            if (size >= 1024 && size <= 1536) {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
-            } else {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 30, baos);
-
-            }
-            byte[] file_data = baos.toByteArray();
-            uploadTask = fileUploadPath.putBytes(file_data);
-            Toast.makeText(AddProductActivity.this, "More than 1MB", Toast.LENGTH_LONG).show();
-        } else {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] file_data = baos.toByteArray();
-            uploadTask = fileUploadPath.putBytes(file_data);
-            Toast.makeText(AddProductActivity.this, "Less than 1MB", Toast.LENGTH_LONG).show();
-
-        }
-
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        final StorageReference fileUploadPath = storageReference.child("product/" + unique_id + ".jpg");
+        CompressBitmapTask compressBitmapTask = new CompressBitmapTask(this, fileUri, new CompressBitmapTask.onSuccessListener() {
             @Override
-            public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                fileUploadPath.getDownloadUrl()
-                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                Date c = Calendar.getInstance().getTime();
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-                                String forematdate = df.format(c);
-                                Log.e(TAG, "onSuccess: Date Time :" + forematdate);
-                                Map<String, Object> productObj = new HashMap<>();
-                                productObj.put("u_id", firebaseUser.getUid());
-                                productObj.put("u_name", firebaseUser.getDisplayName());
-                                productObj.put("u_pic", firebaseUser.getPhotoUrl() == null ? "" : firebaseUser.getPhotoUrl().toString());
-                                productObj.put("product_id", product_id);
-                                productObj.put("name", e_product_name.getText().toString());
-                                productObj.put("description", e_product_detail.getText().toString());
-                                productObj.put("tel", e_product_tel.getText().toString());
-                                productObj.put("picture", unique_id + ".png");
-                                productObj.put("picture_url", uri.toString());
-                                productObj.put("lat", e_lat.getText().toString().trim());
-                                productObj.put("lon", e_lon.getText().toString().trim());
-                                productObj.put("facebook_name", e_facebook_name.getText().toString().trim());
-                                productObj.put("facebook_url", e_facebook_url.getText().toString().trim());
-                                productObj.put("line_url", e_line_url.getText().toString().trim());
-                                productObj.put("line_id", e_line_id.getText().toString().trim());
-                                productObj.put("price", e_price.getText().toString());
-                                productObj.put("timestamps", FieldValue.serverTimestamp());
-                                db.collection("product").document(product_id)
-                                        .set(productObj)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            public void onSuccess(byte[] img_bitmap) {
+                uploadTask = fileUploadPath.putBytes(img_bitmap);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                        fileUploadPath.getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        Date c = Calendar.getInstance().getTime();
+                                        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                                        String forematdate = df.format(c);
+                                        Log.e(TAG, "onSuccess: Date Time :" + forematdate);
+                                        Map<String, Object> productObj = new HashMap<>();
+                                        productObj.put("u_id", firebaseUser.getUid());
+                                        productObj.put("u_name", firebaseUser.getDisplayName());
+                                        productObj.put("u_pic", firebaseUser.getPhotoUrl() == null ? "" : firebaseUser.getPhotoUrl().toString());
+                                        productObj.put("product_id", product_id);
+                                        productObj.put("name", e_product_name.getText().toString());
+                                        productObj.put("description", e_product_detail.getText().toString());
+                                        productObj.put("tel", e_product_tel.getText().toString());
+                                        productObj.put("picture", unique_id + ".jpg");
+                                        productObj.put("picture_url", uri.toString());
+                                        productObj.put("lat", e_lat.getText().toString().trim());
+                                        productObj.put("lon", e_lon.getText().toString().trim());
+                                        productObj.put("facebook_name", e_facebook_name.getText().toString().trim());
+                                        productObj.put("facebook_url", e_facebook_url.getText().toString().trim());
+                                        productObj.put("line_url", e_line_url.getText().toString().trim());
+                                        productObj.put("line_id", e_line_id.getText().toString().trim());
+                                        productObj.put("price", e_price.getText().toString());
+                                        productObj.put("timestamps", FieldValue.serverTimestamp());
+                                        db.collection("product").document(product_id)
+                                                .set(productObj)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        builder.dismiss();
+                                                        finish();
+                                                        Log.d(TAG, "DocumentSnapshot written with ID: " + product_id);
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
                                             @Override
-                                            public void onSuccess(Void aVoid) {
+                                            public void onFailure(@NonNull Exception e) {
                                                 builder.dismiss();
                                                 finish();
-                                                Log.d(TAG, "DocumentSnapshot written with ID: " + product_id);
+                                                Log.e(TAG, "onFailure: " + e);
                                             }
-                                        }).addOnFailureListener(new OnFailureListener() {
+                                        });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         builder.dismiss();
-                                        finish();
-                                        Log.e(TAG, "onFailure: " + e);
                                     }
                                 });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                builder.dismiss();
-                            }
-                        });
 
 
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: " + e);
+                        builder.dismiss();
+                    }
+                });
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }, new CompressBitmapTask.onFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "onFailure: " + e);
+            public void onFailure(Exception e) {
+                builder.dismiss();
+                Toast.makeText(AddProductActivity.this,"Error " + e,Toast.LENGTH_LONG).show();
             }
         });
+        compressBitmapTask.execute();
     }
 
     @Override

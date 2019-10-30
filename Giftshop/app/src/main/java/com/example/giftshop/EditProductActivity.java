@@ -1,5 +1,6 @@
 package com.example.giftshop;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,9 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -147,61 +151,82 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final Map<String, Object> new_product = new HashMap<>();
-                new_product.put("u_id", products.getU_id());
-                new_product.put("product_id", product_id);
-                new_product.put("name", e_product_name.getText().toString());
-                new_product.put("description", e_product_description.getText().toString());
-                new_product.put("tel", e_product_tel.getText().toString());
-                new_product.put("lat", e_lat.getText().toString());
-                new_product.put("lon", e_lon.getText().toString());
-                new_product.put("facebook_name", e_facebook_name.getText().toString());
-                new_product.put("facebook_url", e_facebook_url.getText().toString());
-                new_product.put("line_url", e_line_url.getText().toString());
-                new_product.put("line_id", e_line_id.getText().toString());
-                new_product.put("price", e_product_price.getText().toString());
-                new_product.put("timestamps", FieldValue.serverTimestamp());
-                if (fileUri != null) {
-                    builder.setTitle(R.string._delete_old_image);
+                if (fileUri == null) {
+                    Toast.makeText(EditProductActivity.this, R.string._please_addimage, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (e_product_name.getText().toString().trim().isEmpty() || e_product_name.getText() == null) {
+                    e_product_name.requestFocus();
+                    return;
+                }
+                if (e_product_price.getText().toString().trim().isEmpty() && e_product_price.getText() == null || e_product_price.getText().toString().trim().length() == 0) {
+                    e_product_price.requestFocus();
+                    return;
+                }
+                if (e_product_description.getText().toString().trim().isEmpty() || e_product_description.getText() == null) {
+                    e_product_description.requestFocus();
+                    return;
+                }
+                if (e_product_tel.getText().toString().trim().isEmpty() || e_product_tel.getText() == null) {
+                    e_product_tel.requestFocus();
+                    return;
+                }
+                uPloadData();
+            }
+        });
+
+        delete_img_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new android.app.AlertDialog.Builder(EditProductActivity.this)
+                        .setTitle(R.string._remove_image)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Glide.with(EditProductActivity.this)
+                                        .load(oldImage)
+                                        .centerCrop()
+                                        .into(product_img);
+                                delete_img_btn.setVisibility(View.GONE);
+                                fileUri = null;
+                            }
+                        }).setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
+        });
+    }
+
+    protected void uPloadData(){
+        final Map<String, Object> new_product = new HashMap<>();
+        new_product.put("u_id", products.getU_id());
+        new_product.put("product_id", product_id);
+        new_product.put("name", e_product_name.getText().toString());
+        new_product.put("description", e_product_description.getText().toString());
+        new_product.put("tel", e_product_tel.getText().toString());
+        new_product.put("lat", e_lat.getText().toString());
+        new_product.put("lon", e_lon.getText().toString());
+        new_product.put("facebook_name", e_facebook_name.getText().toString());
+        new_product.put("facebook_url", e_facebook_url.getText().toString());
+        new_product.put("line_url", e_line_url.getText().toString());
+        new_product.put("line_id", e_line_id.getText().toString());
+        new_product.put("price", e_product_price.getText().toString());
+        new_product.put("timestamps", FieldValue.serverTimestamp());
+        if (fileUri != null) {
+            builder.setTitle(R.string._delete_old_image);
+            builder.show();
+
+            tempFile = storageReference.child("product/" + products.getPicture());
+            tempFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    builder.dismiss();
+                    builder.setTitle(R.string._upload_new_image);
                     builder.show();
 
-                    tempFile = storageReference.child("product/" + products.getPicture());
-                    tempFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    CompressBitmapTask compressBitmapTask = new CompressBitmapTask(EditProductActivity.this, fileUri, new CompressBitmapTask.onSuccessListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            builder.dismiss();
-                            builder.setTitle(R.string._upload_new_image);
-                            builder.show();
-                            Bitmap bitmap = null;
-                            double size = 0.00;
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            try {
-                                bitmap = MediaStore.Images.Media.getBitmap(EditProductActivity.this.getContentResolver(), fileUri);
-                                ContentResolver c = getContentResolver();
-                                InputStream is = c.openInputStream(fileUri);
-                                size = is.available() / 1024;
-                                Log.e(TAG, "onActivityResult: File Size " + String.format(size >= 1024 ? "%.2f MB" : "%.2f KB", size >= 1024 ? size / 1024 : size));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                Log.e(TAG, "onActivityResult: Bitmap Error ");
-                            }
-                            if (size > 1024) {
-                                if (size >= 1024 && size <= 1536) {
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
-                                } else {
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 30, baos);
-
-                                }
-                                byte[] file_data = baos.toByteArray();
-                                uploadTask = tempFile.putBytes(file_data);
-                                Toast.makeText(EditProductActivity.this, "More than 1MB", Toast.LENGTH_LONG).show();
-                            } else {
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                                byte[] file_data = baos.toByteArray();
-                                uploadTask = tempFile.putBytes(file_data);
-                                Toast.makeText(EditProductActivity.this, "Less than 1MB", Toast.LENGTH_LONG).show();
-
-                            }
+                        public void onSuccess(byte[] img_bitmap) {
+                            uploadTask = tempFile.putBytes(img_bitmap);
                             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -245,55 +270,43 @@ public class EditProductActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
+                    }, new CompressBitmapTask.onFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            builder.dismiss();
-                            finish();
-                        }
-                    });
+                        public void onFailure(Exception e) {
 
-                } else {
-                    builder.setTitle(R.string._update_database);
-                    builder.show();
-                    db.collection("product").document(products.getProduct_id())
-                            .update(new_product)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    builder.dismiss();
-                                    finish();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            builder.dismiss();
-                            finish();
                         }
                     });
+                    compressBitmapTask.execute();
+
+
                 }
-            }
-        });
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    builder.dismiss();
+                    finish();
+                }
+            });
 
-        delete_img_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new android.app.AlertDialog.Builder(EditProductActivity.this)
-                        .setTitle(R.string._remove_image)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Glide.with(EditProductActivity.this)
-                                        .load(oldImage)
-                                        .centerCrop()
-                                        .into(product_img);
-                                delete_img_btn.setVisibility(View.GONE);
-                                fileUri = null;
-                            }
-                        }).setNegativeButton(R.string.cancel, null)
-                        .show();
-            }
-        });
+        } else {
+            builder.setTitle(R.string._update_database);
+            builder.show();
+            db.collection("product").document(products.getProduct_id())
+                    .update(new_product)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            builder.dismiss();
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    builder.dismiss();
+                    finish();
+                }
+            });
+        }
     }
 
     @Override
