@@ -349,6 +349,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void run() {
                 builder.dismiss();
                 startActivity(intent);
+                finish();
             }
         }, 5000);
     }
@@ -408,7 +409,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 fireBaseLogout();
-                                finish();
                             }
                         }).setNegativeButton(R.string.cancel,null)
                         .show();
