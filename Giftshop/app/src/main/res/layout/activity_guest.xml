@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GuestActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primaryColor"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:titleTextColor="@color/primaryTextColor" />
+
+    <LinearLayout
+        android:layout_below="@id/toolbar"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/new_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#eeeeee">
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.MaterialComponents.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true"
+                tools:ignore="MissingConstraints">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.asksira.loopingviewpager.LoopingViewPager
+                        android:id="@+id/viewpager_loop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:autoScroll="true"
+                        app:isInfinite="true"
+                        app:scrollInterval="5000"
+                        app:viewpagerAspectRatio="0" />
+
+                    <com.rd.PageIndicatorView
+                        android:id="@+id/pageIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_below="@+id/viewpager_loop"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="-50dp"
+                        app:piv_animationType="worm"
+                        app:piv_dynamicCount="true"
+                        app:piv_interactiveAnimation="true"
+                        app:piv_selectedColor="@color/primaryTextColor"
+                        app:piv_unselectedColor="@color/selected" />
+
+                    <Button
+                        android:id="@+id/b_close"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/ic_minimize_24dp" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_new" />
+            </com.google.android.material.card.MaterialCardView>
+        </RelativeLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:background="#eeeeee"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycle_product_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/recycle_no_item"
+        android:textSize="20dp"
+        android:text="@string/no_item"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

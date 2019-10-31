@@ -77,7 +77,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView title,product_price;
+        TextView title,product_price,profile_name;
         ImageView img,profile_pic;
         Button b_expand, b_delete, b_edit;
         LinearLayout expand_content;
@@ -88,6 +88,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
         Holder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
+            profile_name = itemView.findViewById(R.id.profile_name);
             product_price = itemView.findViewById(R.id.product_price);
             img = itemView.findViewById(R.id.img);
             b_expand = itemView.findViewById(R.id.b_expand);
@@ -100,6 +101,7 @@ public class EditProductAdapter extends RecyclerView.Adapter<EditProductAdapter.
 
         @SuppressLint("DefaultLocale")
         void setItem(final int position) {
+            profile_name.setText(products.get(position).getU_name());
             title.setText(products.get(position).getName());
             b_delete.setVisibility(View.VISIBLE);
             b_edit.setVisibility(View.VISIBLE);

@@ -20,7 +20,7 @@
             android:id="@+id/menu_logout"
             android:title="@string/logout"/>
         <item
-            android:icon="@drawable/ic_worlwide"
+            android:icon="@drawable/ic_worldwide"
             android:id="@+id/menu_language"
             android:title="@string/language"
             tools:targetApi="o" />

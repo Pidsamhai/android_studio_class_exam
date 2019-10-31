@@ -1,5 +1,6 @@
 package com.example.giftshop;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("LANGUAGE", 0);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("GUEST", 0);
         final SharedPreferences.Editor editor = pref.edit();
 
         String lang = pref.getString("lang", null);
@@ -74,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUser_noloading() {
         firebaseUser = firebaseAuth.getCurrentUser();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("GUEST", 0);
+        boolean guest = pref.getBoolean("guest", false);
+        Log.i(TAG, "checkUser_noloading: Guest is " + guest);
+        if(guest){
+            startActivity(new Intent(this,GuestActivity.class));
+            finish();
+            return;
+        }
         if (firebaseUser != null) {
             final Intent home_intent = new Intent(MainActivity.this, HomeActivity.class);
             home_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

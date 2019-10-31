@@ -116,8 +116,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .setCancelable(false)
                 .create();
 
-        LayoutInflater _layoutInflater = getLayoutInflater();
-        View select_layout = _layoutInflater.inflate(R.layout.select_language,null);
+        View select_layout = getLayoutInflater().inflate(R.layout.select_language,null);
         _builder = new AlertDialog.Builder(HomeActivity.this)
                 .setTitle(R.string.select_language)
                 .setView(select_layout)
@@ -383,6 +382,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 });
+        updateNewItem();
     }
 
     @Override
@@ -392,7 +392,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "onNavigationItemSelected: " + item.getTitle());
                 break;
             case R.id.menu_add_product:
-
                 startActivityForResult(new Intent(HomeActivity.this, AddProductActivity.class), ADDPRODUCT_REQUEST_CODE);
                 break;
             case R.id.menu_my_product:

@@ -60,4 +60,6 @@
     <string name="_logout_right">ต้องการออกจากระบบใช่หรือไม่?</string>
     <string name="_please_addimage">กรุณาเพิ่มรูปภาพก่อน</string>
     <string name="_please_add_your_name_before">กรูณาตั้งค่าชื่อของคุณก่อนเพิ่มสินค้าที่เมนูตั้งค่า</string>
+    <string name="create_an_account">สมัครสมาชิก</string>
+    <string name="not_registered">ยังไม่ได้สมัครสมาชิก ?</string>
 </resources>

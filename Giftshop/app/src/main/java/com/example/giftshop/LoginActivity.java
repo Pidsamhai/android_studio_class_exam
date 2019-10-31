@@ -1,7 +1,9 @@
 package com.example.giftshop;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,10 +45,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.rbddevs.splashy.Splashy;
-
-import java.util.Locale;
-
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -57,9 +55,9 @@ public class LoginActivity extends AppCompatActivity {
     private Integer RC_SIGN_IN = 7;
     private GoogleSignInOptions gso;
     private CallbackManager callbackManager;
-    private String valid_email;
     LoginButton loginButton;
     private static final String TAG = "MainActivity";
+    private Button b_register;
 
     public LoginActivity() {
     }
@@ -86,7 +84,9 @@ public class LoginActivity extends AppCompatActivity {
         final EditText password = findViewById(R.id.e_password);
         final TextInputLayout l_email = findViewById(R.id.email);
         final TextInputLayout l_password = findViewById(R.id.password);
-        final Button b_registetr = findViewById(R.id.b_register);
+        b_register = findViewById(R.id.b_register);
+        final Button b_guest_login = findViewById(R.id.b_guest_login);
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -125,11 +125,36 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        b_registetr.setOnClickListener(new View.OnClickListener() {
+        b_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        b_guest_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(LoginActivity.this)
+                        .setTitle("Guest Login")
+                        .setMessage("Guest Mode \n คุณสามารถดูสินค้าได้อย่างเดียวเท่านั้น \n ไม่สามารถเพิ่มสินค้าได้")
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                SharedPreferences pref = getApplicationContext().getSharedPreferences("GUEST", 0);
+                                final SharedPreferences.Editor editor = pref.edit();
+
+                                boolean guest = pref.getBoolean("guest", false);
+                                if (!guest) {
+                                    editor.putBoolean("guest",true);
+                                    editor.apply();
+                                }
+                                startActivity(new Intent(LoginActivity.this,GuestActivity.class));
+                                finish();
+                            }
+                        }).setNegativeButton(R.string.cancel,null)
+                        .show();
             }
         });
 
@@ -320,6 +345,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    public void onClick_facebook(View v){
+        loginButton.performClick();
+    }
+    public void onClick_register(View v){
+        b_register.performClick();
+    }
+
     private void checkUser() {
         builder.show();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -341,7 +373,6 @@ public class LoginActivity extends AppCompatActivity {
             Log.e(TAG, "checkUser: NoUser");
         }
     }
-
 
     @Override
     protected void onStart() {

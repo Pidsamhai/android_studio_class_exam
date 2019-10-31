@@ -1,6 +1,6 @@
 package com.example.giftshop.Model;
 
-import android.widget.ScrollView;
+import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 
@@ -22,10 +22,14 @@ public class Product extends ArrayList<String> {
     private String line_id;
     private String lat;
     private String lon;
+    private Timestamp timestamps;
 
-    public Product() {}
+    public Product() {
+    }
 
-    public Product(String u_id,String name,String description,String tel,String picture){}
+    public Product(String u_id, String name, String description, String tel, String picture) {
+    }
+
     public Product(
             String u_id,
             String u_name,
@@ -41,8 +45,11 @@ public class Product extends ArrayList<String> {
             String line_url,
             String line_id,
             String lat,
-            String lon
-    ){}
+            String lon,
+            String product_id,
+            Timestamp timestamps
+    ) {
+    }
 
 
     public String getU_id() {
@@ -107,5 +114,9 @@ public class Product extends ArrayList<String> {
 
     public String getLine_id() {
         return line_id;
+    }
+
+    public Timestamp getTimestamps() {
+        return timestamps;
     }
 }

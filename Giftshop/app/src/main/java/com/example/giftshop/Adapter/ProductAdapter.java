@@ -26,9 +26,7 @@ import com.example.giftshop.Helper.IntentStringHelper;
 import com.example.giftshop.Model.Product;
 import com.example.giftshop.ProductItemInfoActivity;
 import com.example.giftshop.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 import java.util.List;
 
 
