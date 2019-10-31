@@ -408,6 +408,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 fireBaseLogout();
+                                finish();
                             }
                         }).setNegativeButton(R.string.cancel,null)
                         .show();
