@@ -150,11 +150,6 @@ public class EditProductActivity extends AppCompatActivity {
         b_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (fileUri == null) {
-                    Toast.makeText(EditProductActivity.this, R.string._please_addimage, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 if (e_product_name.getText().toString().trim().isEmpty() || e_product_name.getText() == null) {
                     e_product_name.requestFocus();
                     return;
